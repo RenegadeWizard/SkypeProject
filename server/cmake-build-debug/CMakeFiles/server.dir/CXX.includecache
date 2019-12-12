@@ -6,7 +6,31 @@
 
 #IncludeRegexTransform: 
 
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.cpp
+Server.h
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
+
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
+map
+-
+string
+-
+unistd.h
+-
+stdio.h
+-
+iostream
+-
+sys/socket.h
+-
+stdlib.h
+-
+netinet/in.h
+-
+
 /Users/krzysztof/Documents/Studia/semestr 5/sieci/server/main.cpp
 iostream
 -
+Server.h
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
 

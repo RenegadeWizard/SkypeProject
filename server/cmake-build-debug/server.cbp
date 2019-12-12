@@ -80,6 +80,18 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.cpp">
+			<Option target="server"/>
+		</Unit>
+		<Unit filename="/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h">
+			<Option target="server"/>
+		</Unit>
+		<Unit filename="/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.cpp">
+			<Option target="server"/>
+		</Unit>
+		<Unit filename="/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h">
+			<Option target="server"/>
+		</Unit>
 		<Unit filename="/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/main.cpp">
 			<Option target="server"/>
 		</Unit>

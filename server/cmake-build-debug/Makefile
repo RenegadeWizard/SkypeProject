@@ -123,6 +123,60 @@ server/fast:
 	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/build
 .PHONY : server/fast
 
+Connection.o: Connection.cpp.o
+
+.PHONY : Connection.o
+
+# target to build an object file
+Connection.cpp.o:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/Connection.cpp.o
+.PHONY : Connection.cpp.o
+
+Connection.i: Connection.cpp.i
+
+.PHONY : Connection.i
+
+# target to preprocess a source file
+Connection.cpp.i:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/Connection.cpp.i
+.PHONY : Connection.cpp.i
+
+Connection.s: Connection.cpp.s
+
+.PHONY : Connection.s
+
+# target to generate assembly for a file
+Connection.cpp.s:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/Connection.cpp.s
+.PHONY : Connection.cpp.s
+
+Server.o: Server.cpp.o
+
+.PHONY : Server.o
+
+# target to build an object file
+Server.cpp.o:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/Server.cpp.o
+.PHONY : Server.cpp.o
+
+Server.i: Server.cpp.i
+
+.PHONY : Server.i
+
+# target to preprocess a source file
+Server.cpp.i:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/Server.cpp.i
+.PHONY : Server.cpp.i
+
+Server.s: Server.cpp.s
+
+.PHONY : Server.s
+
+# target to generate assembly for a file
+Server.cpp.s:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/Server.cpp.s
+.PHONY : Server.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -159,6 +213,12 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... server"
+	@echo "... Connection.o"
+	@echo "... Connection.i"
+	@echo "... Connection.s"
+	@echo "... Server.o"
+	@echo "... Server.i"
+	@echo "... Server.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
