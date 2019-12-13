@@ -123,6 +123,33 @@ server/fast:
 	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/build
 .PHONY : server/fast
 
+Communication.o: Communication.cpp.o
+
+.PHONY : Communication.o
+
+# target to build an object file
+Communication.cpp.o:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/Communication.cpp.o
+.PHONY : Communication.cpp.o
+
+Communication.i: Communication.cpp.i
+
+.PHONY : Communication.i
+
+# target to preprocess a source file
+Communication.cpp.i:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/Communication.cpp.i
+.PHONY : Communication.cpp.i
+
+Communication.s: Communication.cpp.s
+
+.PHONY : Communication.s
+
+# target to generate assembly for a file
+Communication.cpp.s:
+	$(MAKE) -f CMakeFiles/server.dir/build.make CMakeFiles/server.dir/Communication.cpp.s
+.PHONY : Communication.cpp.s
+
 Connection.o: Connection.cpp.o
 
 .PHONY : Connection.o
@@ -213,6 +240,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... server"
+	@echo "... Communication.o"
+	@echo "... Communication.i"
+	@echo "... Communication.s"
 	@echo "... Connection.o"
 	@echo "... Connection.i"
 	@echo "... Connection.s"
