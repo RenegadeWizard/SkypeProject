@@ -6,6 +6,10 @@
 #define SERVER_CONNECTION_H
 
 #include <sys/socket.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <netinet/in.h>
 
 class Connection {
 public:
@@ -13,9 +17,11 @@ public:
     ~Connection();
     void handleConnection();
     void readData();
-    void sendData();
+    void sendData(char*);
+    int getSocket() const;
+    void setSocket(int socket);
 private:
-    int* socket;
+    int socket;
 };
 
 

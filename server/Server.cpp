@@ -13,40 +13,59 @@ Server::Server(int port) {
 
     char reuseAddrVal = 1;
     if((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0){
-//        Obsluga blędu
+        throw "Could not create socket\n";
     }
+    std::cout << "Created socket at " << serverSocket << "\n";
 
     if(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrVal, sizeof(reuseAddrVal)) < 0){
-//        Obsluga bledu
+        std::cerr << "Could not set options for socket\n";
     }
 
     if(bind(serverSocket, (struct sockaddr*)&serverAddr, sizeof(struct sockaddr)) < 0){
-//        Obsluga bledu
+        throw "Could not bind socket\n";
     }
+    std::cout << "Socked binding successful\n";
 }
 
 Server::~Server(){
     close(serverSocket);
 }
 
-int Server::getIp(std::string nick) {
+Connection* Server::getConnection(std::string nick) {
     return connTable[nick];
 }
 
-void Server::addConn(std::string nick, int sock) {
-    connTable.insert(std::make_pair(nick, sock));
+void Server::addConn(std::string nick, Connection* conn) {
+    connTable.insert(std::make_pair(nick, conn));
 }
 
 void Server::run() {
     if(listen(serverSocket, 5) < 0){
-//        Obsluga bledu
+        throw "Could not listen on socket\n";
     }
     while(true){
-        int sock = accept(serverSocket, NULL, NULL);
-        char buff[100];
-        read(sock, buff, 100);
-        std::string s = buff;
-        addConn(s, sock);   //TODO: Not working idk why
-        std::cout << getIp(s);
+        int sock = accept(serverSocket, nullptr, nullptr);
+        auto conn = new Connection(sock);
+
+        std::cout << "Accepted connection at " << sock << "\n";
+        try{
+            readNick(conn);
+        }catch (char const*& msg){
+            std::cerr << msg;
+        }
     }
+}
+
+void Server::readNick(Connection* conn) {
+    char buff[100];
+    if(read(conn->getSocket(), buff, 100) < 0){
+        throw "Could not read nick\n";
+    }
+    std::cout << "Nick read: " << buff << "\n";
+    addConn(buff, conn);
+}
+
+void Server::disconnect(Connection* conn) {
+// TODO:   Delete from map
+    delete conn;
 }

@@ -15,17 +15,21 @@
 #include <stdlib.h>
 #include <netinet/in.h>
 
+#include "Connection.h"
+
 
 class Server {
 private:
-    std::map<std::string, int> connTable;
+    std::map<std::string, Connection*> connTable;
     int serverSocket;
 public:
     Server(int);
     ~Server();
-    int getIp(std::string);
-    void addConn(std::string, int);
+    Connection* getConnection(std::string);
+    void addConn(std::string, Connection*);
     void run();
+    void readNick(Connection*);
+    void disconnect(Connection*);
 };
 
 
