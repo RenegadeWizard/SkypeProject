@@ -14,9 +14,10 @@ void Connection::handleConnection() {
 
 }
 
-void Connection::readData() {
-    char buff[1000];
+char* Connection::readData() {
+    char* buff = nullptr;
     read(socket, buff, 1000);
+    return buff;
 }
 
 void Connection::sendData(char* buff) {

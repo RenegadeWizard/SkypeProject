@@ -18,7 +18,7 @@ public:
     void setFirstConn(Connection *firstConn);
     Connection *getSecondConn() const;
     void setSecondConn(Connection *secondConn);
-    void comunicate(Connection*);
+    bool comunicate();
 };
 
 

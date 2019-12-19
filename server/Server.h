@@ -16,6 +16,7 @@
 #include <netinet/in.h>
 
 #include "Connection.h"
+#include "Communication.h"
 
 
 class Server {
@@ -30,6 +31,8 @@ public:
     void run();
     void readNick(Connection*);
     void disconnect(Connection*);
+    void connect(Connection*, Connection*);
+    void sendInfo(Connection*);
 };
 
 

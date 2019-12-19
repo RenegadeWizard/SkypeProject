@@ -69,3 +69,15 @@ void Server::disconnect(Connection* conn) {
 // TODO:   Delete from map
     delete conn;
 }
+
+void Server::connect(Connection* conn1, Connection* conn2) {
+    auto communication = new Communication(conn1, conn2);
+    bool connection = true;
+    while(connection)
+        connection = communication->comunicate();
+}
+
+void Server::sendInfo(Connection* conn) {
+    char* buff = nullptr;   // TODO array of data with info about other clients
+    conn->sendData(buff);
+}
