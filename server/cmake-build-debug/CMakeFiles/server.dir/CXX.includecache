@@ -6,6 +6,22 @@
 
 #IncludeRegexTransform: 
 
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.h
+Connection.h
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
+
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
+sys/socket.h
+-
+unistd.h
+-
+stdio.h
+-
+stdlib.h
+-
+netinet/in.h
+-
+
 /Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.cpp
 Server.h
 /Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
@@ -27,6 +43,10 @@ stdlib.h
 -
 netinet/in.h
 -
+Connection.h
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
+Communication.h
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.h
 
 /Users/krzysztof/Documents/Studia/semestr 5/sieci/server/main.cpp
 iostream

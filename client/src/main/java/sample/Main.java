@@ -10,10 +10,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.show();
+//        primaryStage.show();
+        Connect connetion = new Connect("localhost", 1234);
+        connetion.sendNick("Renegade");
+//        connetion.connectTo("halo");
+        connetion.disconnect();
     }
 
 

@@ -30,8 +30,11 @@ void Communication::setSecondConn(Connection *secondConn) {
     Communication::secondConn = secondConn;
 }
 
-void Communication::comunicate(Connection* conn) {
-    char buff[1000];
-    ssize_t r = read(conn->getSocket(), buff, 1000);
-    write(conn->getSocket(), buff, (size_t) r); // TODO idk if ok
+bool Communication::comunicate() {
+    char* buff;
+    buff = firstConn->readData();
+    secondConn->sendData(buff);
+    buff = secondConn->readData();
+    firstConn->sendData(buff);
+    return true;    // TODO return false when connection over
 }

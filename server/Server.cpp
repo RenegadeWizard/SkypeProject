@@ -6,6 +6,7 @@
 #include "Server.h"
 
 Server::Server(int port) {
+    connTable = new std::map<std::string, Connection*>();
     struct sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -32,11 +33,11 @@ Server::~Server(){
 }
 
 Connection* Server::getConnection(std::string nick) {
-    return connTable[nick];
+    return (*connTable)[nick];
 }
 
 void Server::addConn(std::string nick, Connection* conn) {
-    connTable.insert(std::make_pair(nick, conn));
+    connTable->insert(std::make_pair(nick, conn));
 }
 
 void Server::run() {
@@ -49,23 +50,50 @@ void Server::run() {
 
         std::cout << "Accepted connection at " << sock << "\n";
         try{
-            readNick(conn);
+            readInfo(conn);
+            readInfo(conn);
         }catch (char const*& msg){
             std::cerr << msg;
         }
     }
 }
 
-void Server::readNick(Connection* conn) {
-    char buff[100];
+void Server::readInfo(Connection* conn) {
+    char* buff = new char(100);
     if(read(conn->getSocket(), buff, 100) < 0){
-        throw "Could not read nick\n";
+        throw "Reading info failed\n";
     }
-    std::cout << "Nick read: " << buff << "\n";
-    addConn(buff, conn);
+    Connection* c = nullptr;
+    Communication* com = nullptr;
+    switch(buff[0]){
+        case 'N':
+            std::cout << "Nick: ";
+            addConn(++buff, conn);
+            break;
+        case 'C':
+            std::cout << "Connect to: ";
+            c = getConnection(++buff);
+            com = new Communication(conn, c);
+            break;
+        default:
+            throw "Not recognized action\n";
+    }
+    std::cout << buff << "\n";
 }
 
 void Server::disconnect(Connection* conn) {
 // TODO:   Delete from map
     delete conn;
+}
+
+void Server::connect(Connection* conn1, Connection* conn2) {
+    auto communication = new Communication(conn1, conn2);
+    bool connection = true;
+    while(connection)
+        connection = communication->comunicate();
+}
+
+void Server::sendInfo(Connection* conn) {
+    char* buff = nullptr;   // TODO array of data with info about other clients
+    conn->sendData(buff);
 }

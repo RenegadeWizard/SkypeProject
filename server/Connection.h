@@ -16,7 +16,7 @@ public:
     Connection(int);
     ~Connection();
     void handleConnection();
-    void readData();
+    char* readData();
     void sendData(char*);
     int getSocket() const;
     void setSocket(int socket);
