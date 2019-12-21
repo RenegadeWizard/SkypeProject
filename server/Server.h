@@ -21,7 +21,7 @@
 
 class Server {
 private:
-    std::map<std::string, Connection*>* connTable;
+    std::map<std::string, Connection*> connTable;
     int serverSocket;
 public:
     Server(int);
@@ -33,6 +33,7 @@ public:
     void disconnect(Connection*);
     void connect(Connection*, Connection*);
     void sendInfo(Connection*);
+    void sendToEverybody();
 };
 
 

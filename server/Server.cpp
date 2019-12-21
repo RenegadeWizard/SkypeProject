@@ -6,7 +6,6 @@
 #include "Server.h"
 
 Server::Server(int port) {
-    connTable = new std::map<std::string, Connection*>();
     struct sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -33,11 +32,11 @@ Server::~Server(){
 }
 
 Connection* Server::getConnection(std::string nick) {
-    return (*connTable)[nick];
+    return connTable[nick];
 }
 
 void Server::addConn(std::string nick, Connection* conn) {
-    connTable->insert(std::make_pair(nick, conn));
+    connTable.insert(std::make_pair(nick, conn));
 }
 
 void Server::run() {
@@ -50,7 +49,6 @@ void Server::run() {
 
         std::cout << "Accepted connection at " << sock << "\n";
         try{
-            readInfo(conn);
             readInfo(conn);
         }catch (char const*& msg){
             std::cerr << msg;
@@ -94,6 +92,13 @@ void Server::connect(Connection* conn1, Connection* conn2) {
 }
 
 void Server::sendInfo(Connection* conn) {
-    char* buff = nullptr;   // TODO array of data with info about other clients
-    conn->sendData(buff);
+    for(auto c : connTable){
+//        conn->sendData(c.first);
+    }
+}
+
+void Server::sendToEverybody() {
+    for(auto c : connTable){
+        sendInfo(c.second);
+    }
 }
