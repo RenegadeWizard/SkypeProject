@@ -31,12 +31,12 @@ Server::~Server(){
     close(serverSocket);
 }
 
-Connection* Server::getConnection(std::string nick) {
+Connection* Server::getConnection(char* nick) {
     return connTable[nick];
 }
 
-void Server::addConn(std::string nick, Connection* conn) {
-    connTable.insert(std::make_pair(nick, conn));
+void Server::addConn(char* nick, Connection* conn) {
+    connTable[nick] = conn;
 }
 
 void Server::run() {
@@ -50,6 +50,7 @@ void Server::run() {
         std::cout << "Accepted connection at " << sock << "\n";
         try{
             readInfo(conn);
+            sendToEverybody();
         }catch (char const*& msg){
             std::cerr << msg;
         }
@@ -62,7 +63,7 @@ void Server::readInfo(Connection* conn) {
         throw "Reading info failed\n";
     }
     Connection* c = nullptr;
-    Communication* com = nullptr;
+    Communication* com = nullptr;   // TODO: Delete pointers after the thing
     switch(buff[0]){
         case 'N':
             std::cout << "Nick: ";
@@ -92,9 +93,23 @@ void Server::connect(Connection* conn1, Connection* conn2) {
 }
 
 void Server::sendInfo(Connection* conn) {
+    char* wholeInfo = new char(100);
+    strcpy(wholeInfo, "S");
+    strcat(wholeInfo, "clients\n");
+    conn->sendData(wholeInfo);
+    sleep(1);
     for(auto c : connTable){
-//        conn->sendData(c.first);
+        strcpy(wholeInfo, "I");
+        strcat(wholeInfo, c.first);
+        strcat(wholeInfo, "\n");
+        std::cout << "Sending: " << wholeInfo;
+        conn->sendData(wholeInfo);
+        sleep(1);
     }
+    strcpy(wholeInfo, "E");
+    strcat(wholeInfo, "clients\n");
+    conn->sendData(wholeInfo);
+
 }
 
 void Server::sendToEverybody() {

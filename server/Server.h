@@ -21,13 +21,13 @@
 
 class Server {
 private:
-    std::map<std::string, Connection*> connTable;
+    std::map<char*, Connection*> connTable;
     int serverSocket;
 public:
     Server(int);
     ~Server();
-    Connection* getConnection(std::string);
-    void addConn(std::string, Connection*);
+    Connection* getConnection(char*);
+    void addConn(char*, Connection*);
     void run();
     void readInfo(Connection*);
     void disconnect(Connection*);
