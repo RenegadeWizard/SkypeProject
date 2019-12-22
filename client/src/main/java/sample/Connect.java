@@ -4,13 +4,9 @@ import java.io.*;
 import java.net.Socket;
 
 public class Connect {
-    private String serverIp;
-    private int port;
     private Socket socket;
 
     public Connect(String serverIp, int port) throws IOException {
-        this.serverIp = serverIp;
-        this.port = port;
         socket = new Socket(serverIp, port);
     }
 

@@ -14,6 +14,7 @@
 #include <sys/socket.h>
 #include <stdlib.h>
 #include <netinet/in.h>
+#include <pthread.h>
 
 #include "Connection.h"
 #include "Communication.h"

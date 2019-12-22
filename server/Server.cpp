@@ -40,6 +40,7 @@ void Server::addConn(char* nick, Connection* conn) {
 }
 
 void Server::run() {
+
     if(listen(serverSocket, 5) < 0){
         throw "Could not listen on socket\n";
     }
@@ -50,7 +51,6 @@ void Server::run() {
         std::cout << "Accepted connection at " << sock << "\n";
         try{
             readInfo(conn);
-            sendToEverybody();
         }catch (char const*& msg){
             std::cerr << msg;
         }
