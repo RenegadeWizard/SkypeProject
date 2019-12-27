@@ -3,9 +3,12 @@ package sample;
 import com.github.sarxos.webcam.Webcam;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 //import org.opencv.core.Core;
 //import org.opencv.core.CvType;
 //import org.opencv.core.Mat;
@@ -21,10 +24,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-//        Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
-//        primaryStage.setTitle("Hello World");
-//        primaryStage.setScene(new Scene(root, 300, 275));
-//        primaryStage.show();
+        Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
+        primaryStage.setTitle("Spyke");
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        double height = primaryScreenBounds.getWidth() * 0.494;
+        double width = primaryScreenBounds.getWidth() * 0.8;
+        primaryStage.setScene(new Scene(root, width, height));
+        primaryStage.show();
 //        Connect connetion = new Connect("localhost", 1234);
 //        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
 //        System.out.println("Enter username");
@@ -35,10 +41,13 @@ public class Main extends Application {
 //        connetion.receiveInfo();
 //        connetion.disconnect();
 
-        Webcam webcam = Webcam.getDefault();
-        System.out.println("mhm");
-        webcam.open();
-        System.out.println("lol");
+//        Webcam webcam = Webcam.getDefault();
+//        List webcam = Webcam.getWebcams(2000);
+//        Webcam webcam = Webcam.get
+//        System.out.println("mhm");
+
+//        webcam.open();
+//        System.out.println("lol");
 
     }
 
