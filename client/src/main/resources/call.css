@@ -1,0 +1,13 @@
+#endCall{
+    -fx-background-color: red;
+    -fx-background-radius: 5em;
+    -fx-min-height: 50px;
+    -fx-min-width: 50px;
+    -fx-max-height: 50px;
+    -fx-max-width: 50px;
+    -fx-cursor: hand;
+}
+
+.root{
+    -fx-padding: 0 0 50 0;
+}

@@ -24,6 +24,7 @@
     -fx-max-height: 50px;
     -fx-max-width: 50px;
     -fx-background-color: #00ff00;
+    -fx-cursor: hand;
 }
 
 #contacts{
@@ -49,9 +50,10 @@
     -fx-spacing: 15px;
 }
 
-#connect{
+.connect{
     -fx-background-color: rgb(29, 189, 219);
     -fx-text-fill: #fff;
+    -fx-cursor: hand;
 }
 
 .wrong{
@@ -60,4 +62,18 @@
     -fx-border-width: 0 0 1 0;
     -fx-border-color: #999;
     -fx-text-fill: #999;
+}
+
+.disconnect{
+    -fx-background-color: red;
+    -fx-text-fill: #fff;
+    -fx-cursor: hand;
+}
+
+.connected{
+    -fx-text-fill: green;
+}
+
+.not_connected{
+    -fx-text-fill: red;
 }

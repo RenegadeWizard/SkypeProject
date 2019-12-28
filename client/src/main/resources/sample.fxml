@@ -19,12 +19,16 @@
                 </ImageView>
             </left>
             <right>
+                <VBox>
                     <HBox id="submits">
                         <TextField styleClass="input" promptText="Serwer ip" maxWidth="150" fx:id="ip"></TextField>
                         <TextField styleClass="input" promptText="port" maxWidth="75" fx:id="port"></TextField>
                         <TextField styleClass="input" promptText="nick" maxWidth="150" fx:id="nick"></TextField>
-                        <Button id="connect" onAction="#connect">Connect</Button>
+                        <Button styleClass="connect" onAction="#connect" fx:id="connectButton" prefWidth="100">Connect</Button>
                     </HBox>
+                    <Label fx:id="info"></Label>
+                </VBox>
+
 
             </right>
         </BorderPane>

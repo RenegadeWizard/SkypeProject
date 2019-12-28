@@ -50,7 +50,8 @@ void Server::run() {
 
         std::cout << "Accepted connection at " << sock << "\n";
         try{
-            readInfo(conn);
+            while(true)
+                readInfo(conn);
         }catch (char const*& msg){
             std::cerr << msg;
         }
@@ -74,6 +75,12 @@ void Server::readInfo(Connection* conn) {
             c = getConnection(++buff);
             com = new Communication(conn, c);
             break;
+        case 'L':
+            sendInfo(conn);
+            break;
+        case 'D':
+            disconnect(conn);
+            break;
         default:
             throw "Not recognized action\n";
     }
@@ -81,7 +88,11 @@ void Server::readInfo(Connection* conn) {
 }
 
 void Server::disconnect(Connection* conn) {
-// TODO:   Delete from map
+    for(auto a : connTable)
+        if(a.second == conn) {
+            connTable.erase(a.first);
+            break;
+        }
     delete conn;
 }
 
