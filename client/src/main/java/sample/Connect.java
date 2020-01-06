@@ -49,17 +49,16 @@ public class Connect {
             if(msg.charAt(0) == 'E')
                 break;
             if(msg.substring(1).equals("clients")) {
-                availableClients();
+//                availableClients();
                 continue;
             }
-            System.out.println(msg.substring(1));
+//            System.out.println(msg.substring(1));
             users.add(msg.substring(1));
         }
     }
 
     public void availableClients() throws IOException{
         System.out.println("Available clients:");
-
     }
 
 }

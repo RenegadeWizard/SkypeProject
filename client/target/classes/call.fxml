@@ -10,7 +10,6 @@
 <?import javafx.scene.image.Image?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sample.Call"
             stylesheets="call.css"
             fx:id="background" id="background">
     <bottom>

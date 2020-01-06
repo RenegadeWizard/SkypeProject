@@ -16,11 +16,17 @@ import java.io.IOException;
 
 public class Call {
 
+    Controller controller;
+
     @FXML
     private BorderPane background;
 
     @FXML
     private Button endCallButton;
+
+    public Call(Controller controller){
+        this.controller = controller;
+    }
 
     private void endCall(){
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -28,7 +34,9 @@ public class Call {
         double width = primaryScreenBounds.getWidth() * 0.8;
         Stage stage = (Stage) background.getScene().getWindow();
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample.fxml"));
+            loader.setController(controller);
+            Parent root = loader.load();
             Scene scene = new Scene(root, width, height);
             stage.setScene(scene);
             stage.show();

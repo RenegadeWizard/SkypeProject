@@ -32,24 +32,31 @@ public class Controller {
 
     @FXML
     private TextField ip;
+    private String ipString;
 
     @FXML
     private TextField port;
+    private String portString;
 
     @FXML
     private TextField nick;
+    private String nickString;
 
     @FXML
     private Label info;
 
+    public boolean getConnected() { return connected; }
+
     public void callView(String nick){
-        System.out.println(nick);
         Stage stage = (Stage) connectButton.getScene().getWindow();
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/call.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/call.fxml"));
             Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
             double height = primaryScreenBounds.getWidth() * 0.494;
             double width = primaryScreenBounds.getWidth() * 0.8;
+            Call callController = new Call(this);
+            loader.setController(callController);
+            Parent root = loader.load();
             Scene scene = new Scene(root, width, height);
             stage.setScene(scene);
             stage.show();
@@ -83,6 +90,13 @@ public class Controller {
 
     }
 
+    public void stopApp(){
+        if(connected)
+            try {
+                connection.disconnect();
+            }catch (IOException ignored){ }
+    }
+
     public void unlistClients(){
         contacts.getChildren().clear();
     }
@@ -98,6 +112,19 @@ public class Controller {
         }catch(NumberFormatException e){
             return false;
         }
+    }
+
+    private void connectedView(){
+        while (connectButton.getStyleClass().remove("connect")) ;
+        connectButton.getStyleClass().add("disconnect");
+        connectButton.setText("disconnect");
+        info.setText("Connected!");
+        while (info.getStyleClass().remove("not_connected")) ;
+        info.getStyleClass().add("connected");
+        ip.setText(ipString);
+        port.setText(portString);
+        nick.setText(nickString);
+        listClients();
     }
 
     @FXML
@@ -137,8 +164,11 @@ public class Controller {
                 return;
             }
             try {
-                connection = new Connect(ip.getText(), Integer.parseInt(port.getText()));
-                connection.sendNick(nick.getText());
+                ipString = ip.getText();
+                portString = port.getText();
+                nickString = nick.getText();
+                connection = new Connect(ipString, Integer.parseInt(portString));
+                connection.sendNick(nickString);
                 connected = true;
                 while (connectButton.getStyleClass().remove("connect")) ;
                 connectButton.getStyleClass().add("disconnect");
@@ -175,5 +205,11 @@ public class Controller {
             info.setText("Disconnected");
         }
 
+    }
+
+    @FXML
+    public void initialize(){
+        if(connected)
+            connectedView();
     }
 }
