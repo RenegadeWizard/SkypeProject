@@ -67,6 +67,9 @@ public class Controller {
 
     public void listClients(){
         for(String nick : connection.getUsers()){
+//            if(nick.equals(connection.getNick())){    TODO: Don't show yourself
+//                continue;
+//            }
             HBox hbox = new HBox();
             Button mainButton = new Button();
             Image image = new Image("img/default-profile.jpg");

@@ -44,14 +44,17 @@ void Server::run() {
     if(listen(serverSocket, 5) < 0){
         throw "Could not listen on socket\n";
     }
+    std::thread *threadTab[10];
     while(true){
         int sock = accept(serverSocket, nullptr, nullptr);
         auto conn = new Connection(sock);
 
         std::cout << "Accepted connection at " << sock << "\n";
         try{
-            while(true)
+//            threadTab = new std::thread(this->readInfo, conn);
+            while (true){
                 readInfo(conn);
+            }
         }catch (char const*& msg){
             std::cerr << msg;
         }
@@ -60,12 +63,12 @@ void Server::run() {
 
 void Server::readInfo(Connection* conn) {
     char* buff = new char(100);
-    if(read(conn->getSocket(), buff, 100) < 0){
+    if (read(conn->getSocket(), buff, 100) < 0) {
         throw "Reading info failed\n";
     }
-    Connection* c = nullptr;
-    Communication* com = nullptr;   // TODO: Delete pointers after the thing
-    switch(buff[0]){
+    Connection *c = nullptr;
+    Communication *com = nullptr;   // TODO: Delete pointers after the thing
+    switch (buff[0]) {
         case 'N':
             std::cout << "Nick: ";
             addConn(++buff, conn);
@@ -73,7 +76,7 @@ void Server::readInfo(Connection* conn) {
         case 'C':
             std::cout << "Connect to: ";
             c = getConnection(++buff);
-            com = new Communication(conn, c);
+            connect(conn, c);
             break;
         case 'L':
             sendInfo(conn);
@@ -82,6 +85,7 @@ void Server::readInfo(Connection* conn) {
             disconnect(conn);
             break;
         default:
+//                std::cout << "This: " << buff << "\n";
             throw "Not recognized action\n";
     }
     std::cout << buff << "\n";
@@ -93,6 +97,7 @@ void Server::disconnect(Connection* conn) {
             connTable.erase(a.first);
             break;
         }
+    conn->sendData((char*)"Disconnected");
     delete conn;
 }
 

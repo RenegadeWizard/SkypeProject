@@ -4,9 +4,13 @@ import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Connect {
+public class Connect{
     private Socket socket;
     private ArrayList<String> users;
+    private boolean wantsToConnect = false;
+    private String nick;
+
+    public String getNick() { return nick; }
 
     public ArrayList<String> getUsers() {
         return users;
@@ -21,10 +25,16 @@ public class Connect {
         String encapsulatedNick = "Disconnect";
         OutputStream os = socket.getOutputStream();
         os.write(encapsulatedNick.getBytes());  // TODO: receive message from server (success)
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String msg = reader.readLine();
+        if(msg.charAt(0) == 'D'){
+            System.out.println("Disconnected!");
+        }
         socket.close();
     }
 
     public void sendNick(String nick) throws IOException{
+        this.nick = nick;
         String encapsulatedNick = "N" + nick;
         OutputStream os = socket.getOutputStream();
         os.write(encapsulatedNick.getBytes());
@@ -52,7 +62,7 @@ public class Connect {
 //                availableClients();
                 continue;
             }
-//            System.out.println(msg.substring(1));
+            System.out.println(msg.substring(1));
             users.add(msg.substring(1));
         }
     }

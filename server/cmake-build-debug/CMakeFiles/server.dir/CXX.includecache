@@ -43,7 +43,7 @@ stdlib.h
 -
 netinet/in.h
 -
-pthread.h
+thread
 -
 Connection.h
 /Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
