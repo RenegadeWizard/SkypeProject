@@ -2,6 +2,7 @@ package sample;
 
 import com.github.sarxos.webcam.Webcam;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
@@ -22,11 +23,13 @@ import java.util.Scanner;
 
 public class Main extends Application {
 
-    private Controller controller = new Controller();
+    private Controller controller;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        Platform.setImplicitExit(false);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample.fxml"));
+        controller = new Controller();
         loader.setController(controller);
         Parent root = loader.load();
         primaryStage.setTitle("Spyke");

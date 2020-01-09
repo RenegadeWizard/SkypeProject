@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" stylesheets="main.css">
+<BorderPane xmlns:fx="http://javafx.com/fxml" stylesheets="main.css" fx:id="background">
     <top>
         <BorderPane>
             <left>

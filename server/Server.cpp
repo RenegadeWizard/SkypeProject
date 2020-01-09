@@ -72,6 +72,7 @@ void Server::readInfo(Connection* conn) {
         case 'N':
             std::cout << "Nick: ";
             addConn(++buff, conn);
+            conn->setNick(buff);
             break;
         case 'C':
             std::cout << "Connect to: ";
@@ -88,7 +89,7 @@ void Server::readInfo(Connection* conn) {
 //                std::cout << "This: " << buff << "\n";
             throw "Not recognized action\n";
     }
-    std::cout << buff << "\n";
+//    std::cout << buff << "\n";
 }
 
 void Server::disconnect(Connection* conn) {
@@ -102,10 +103,12 @@ void Server::disconnect(Connection* conn) {
 }
 
 void Server::connect(Connection* conn1, Connection* conn2) {
-    auto communication = new Communication(conn1, conn2);
-    bool connection = true;
-    while(connection)
-        connection = communication->comunicate();
+    try{
+        auto communication = new Communication(conn1, conn2);
+        while(communication->comunicate()) ;
+    }catch (char const*& msg) {
+        std::cerr << msg;
+    }
 }
 
 void Server::sendInfo(Connection* conn) {

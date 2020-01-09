@@ -16,7 +16,8 @@ import java.io.IOException;
 
 public class Call {
 
-    Controller controller;
+    private Controller controller;
+    private String nick;
 
     @FXML
     private BorderPane background;
@@ -24,14 +25,14 @@ public class Call {
     @FXML
     private Button endCallButton;
 
-    public Call(Controller controller){
+    public Call(Controller controller, String nick){
         this.controller = controller;
+        this.nick = nick;
     }
 
     private void endCall(){
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        double height = primaryScreenBounds.getWidth() * 0.494;
-        double width = primaryScreenBounds.getWidth() * 0.8;
+        double height = background.getHeight();
+        double width = background.getWidth();
         Stage stage = (Stage) background.getScene().getWindow();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample.fxml"));
@@ -48,7 +49,7 @@ public class Call {
     @FXML
     public void initialize(){
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        double height = primaryScreenBounds.getWidth() * 0.494;
+        double height = primaryScreenBounds.getWidth() * 0.495;
         double width = primaryScreenBounds.getWidth() * 0.8;
         BackgroundImage myImage = new BackgroundImage(new Image("img/pewdiepie.jpg", width, height, false,false), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         background.setBackground(new Background(myImage));

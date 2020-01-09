@@ -1,24 +1,31 @@
 package sample;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Connect{
+public class Connect implements Runnable{
     private Socket socket;
-    private ArrayList<String> users;
+    private ObservableList<String> users;
     private boolean wantsToConnect = false;
     private String nick;
 
     public String getNick() { return nick; }
+    public void setNick(String nick) { this.nick = nick; }
 
-    public ArrayList<String> getUsers() {
+    public ObservableList<String> getUsers() {
         return users;
     }
 
-    public Connect(String serverIp, int port) throws IOException {
+    public Connect(){
+        users = FXCollections.observableArrayList();
+    }
+
+    public void connectSocket(String serverIp, int port) throws IOException{
         socket = new Socket(serverIp, port);
-        users = new ArrayList<>();
     }
 
     public void disconnect() throws IOException{
@@ -33,8 +40,7 @@ public class Connect{
         socket.close();
     }
 
-    public void sendNick(String nick) throws IOException{
-        this.nick = nick;
+    public void sendNick() throws IOException{
         String encapsulatedNick = "N" + nick;
         OutputStream os = socket.getOutputStream();
         os.write(encapsulatedNick.getBytes());
@@ -50,9 +56,17 @@ public class Connect{
         String encapsulatedNick = "C" + nick;
         OutputStream os = socket.getOutputStream();
         os.write(encapsulatedNick.getBytes());
+        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        String msg = reader.readLine();
+        if(msg.equals("ACC")){
+            System.out.println("Connected");
+        }else{
+            System.err.println("Could not connect");
+        }
     }
 
     public void receiveInfo() throws IOException{
+        users.clear();
         while(true){
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String msg = reader.readLine();
@@ -67,8 +81,12 @@ public class Connect{
         }
     }
 
-    public void availableClients() throws IOException{
-        System.out.println("Available clients:");
+    @Override
+    public void run() {
+        try {
+            sendNick();
+            requestUsersList();
+            receiveInfo();
+        }catch (IOException ignored) { }
     }
-
 }

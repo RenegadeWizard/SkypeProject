@@ -1,5 +1,8 @@
 package sample;
 
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -11,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -22,7 +26,8 @@ import java.io.IOException;
 public class Controller {
 
     private boolean connected = false;
-    private Connect connection;
+    private Connect connection = new Connect();
+    private Thread thread;
 
     @FXML
     private Button connectButton;
@@ -45,16 +50,21 @@ public class Controller {
     @FXML
     private Label info;
 
+    @FXML
+    public BorderPane background;
+
     public boolean getConnected() { return connected; }
 
     public void callView(String nick){
         Stage stage = (Stage) connectButton.getScene().getWindow();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/call.fxml"));
-            Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-            double height = primaryScreenBounds.getWidth() * 0.494;
-            double width = primaryScreenBounds.getWidth() * 0.8;
-            Call callController = new Call(this);
+            double height = background.getHeight();
+            double width = background.getWidth();
+            Call callController = new Call(this, nick);
+//            connection.connectTo(nick);
+//            System.out.println(connection);
+//            System.out.println(nick);
             loader.setController(callController);
             Parent root = loader.load();
             Scene scene = new Scene(root, width, height);
@@ -66,6 +76,7 @@ public class Controller {
     }
 
     public void listClients(){
+        contacts.getChildren().clear();
         for(String nick : connection.getUsers()){
 //            if(nick.equals(connection.getNick())){    TODO: Don't show yourself
 //                continue;
@@ -97,7 +108,8 @@ public class Controller {
         if(connected)
             try {
                 connection.disconnect();
-            }catch (IOException ignored){ }
+                thread.join();
+            }catch (Exception ignored){ }
     }
 
     public void unlistClients(){
@@ -170,8 +182,10 @@ public class Controller {
                 ipString = ip.getText();
                 portString = port.getText();
                 nickString = nick.getText();
-                connection = new Connect(ipString, Integer.parseInt(portString));
-                connection.sendNick(nickString);
+                connection.connectSocket(ipString, Integer.parseInt(portString));
+                connection.setNick(nickString);
+                thread = new Thread(connection);
+                thread.start();
                 connected = true;
                 while (connectButton.getStyleClass().remove("connect")) ;
                 connectButton.getStyleClass().add("disconnect");
@@ -186,20 +200,14 @@ public class Controller {
             info.setText("Connected!");
             while (info.getStyleClass().remove("not_connected")) ;
             info.getStyleClass().add("connected");
-            try {
-                connection.requestUsersList();
-                connection.receiveInfo();
-            } catch (IOException e) {
-                System.err.println("Request user list failed");
-            }
-            listClients();
+//            try {
+//                connection.requestUsersList();
+//                connection.receiveInfo();
+//            } catch (IOException e) {
+//                System.err.println("Request user list failed");
+//            }
         }else{
-            try {
-                connection.disconnect();
-            }catch (IOException e){
-                System.err.println("Could not disconnect");
-                return;
-            }
+            stopApp();
             unlistClients();
             connected = false;
             while (connectButton.getStyleClass().remove("disconnect"));
@@ -214,5 +222,7 @@ public class Controller {
     public void initialize(){
         if(connected)
             connectedView();
+        connection.getUsers().addListener((ListChangeListener<String>) c -> Platform.runLater(() -> listClients()));
     }
+
 }

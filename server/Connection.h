@@ -20,8 +20,11 @@ public:
     void sendData(char*);
     int getSocket() const;
     void setSocket(int socket);
+    void setNick(char* nick) { this->nick = nick; }
+    char* getNick() { return nick; }
 private:
     int socket;
+    char* nick;
 };
 
 

@@ -2,11 +2,21 @@
 // Created by Krzysztof Sychla on 2019-12-13.
 //
 
+#include <cstring>
+#include <cstdio>
 #include "Communication.h"
 
 Communication::Communication(Connection* conn1, Connection* conn2) {
     firstConn = conn1;
     secondConn = conn2;
+    char* wholeInfo = new char(100);
+    strcpy(wholeInfo, "C");
+    strcat(wholeInfo, conn1->getNick());
+    secondConn->sendData(wholeInfo);
+//    if(strcmp(secondConn->readData(), "ACC") != 0){
+//        throw "Connection not established";
+//    }
+    firstConn->sendData((char*)"ACC");
 }
 
 Communication::~Communication() {
@@ -36,5 +46,5 @@ bool Communication::comunicate() {
     secondConn->sendData(buff);
     buff = secondConn->readData();
     firstConn->sendData(buff);
-    return true;    // TODO return false when connection over
+    return (bool) strcmp(buff, "END");
 }
