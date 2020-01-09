@@ -77,3 +77,36 @@
 .not_connected{
     -fx-text-fill: red;
 }
+
+.endCall{
+    -fx-background-color: red;
+    -fx-background-radius: 5em;
+    -fx-min-height: 50px;
+    -fx-min-width: 50px;
+    -fx-max-height: 50px;
+    -fx-max-width: 50px;
+    -fx-cursor: hand;
+}
+
+.popUpCall{
+    -fx-background-color: rgb(43, 46, 50);
+    -fx-max-height: 150px;
+    -fx-min-width: 300px;
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+}
+
+.none{
+    -fx-background-color: none;
+    -fx-text-fill: none;
+}
+
+.popUpLabel{
+    -fx-text-fill: #aaa;
+    -fx-font-size: 18px;
+}
+
+.popUpHbox{
+    -fx-spacing: 30px;
+    -fx-alignment: center;
+}

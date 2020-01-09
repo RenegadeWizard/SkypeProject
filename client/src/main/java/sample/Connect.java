@@ -73,7 +73,6 @@ public class Connect implements Runnable{
             if(msg.charAt(0) == 'E')
                 break;
             if(msg.substring(1).equals("clients")) {
-//                availableClients();
                 continue;
             }
             System.out.println(msg.substring(1));

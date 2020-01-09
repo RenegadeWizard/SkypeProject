@@ -27,7 +27,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Platform.setImplicitExit(false);
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample.fxml"));
         controller = new Controller();
         loader.setController(controller);

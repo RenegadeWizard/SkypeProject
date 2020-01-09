@@ -53,7 +53,50 @@ public class Controller {
     @FXML
     public BorderPane background;
 
+    @FXML
+    public VBox popUpCall;
+
+    @FXML
+    public Label popUpLabel;
+
+    @FXML
+    public HBox popUpHbox;
+
+    @FXML
+    public Button callButton;
+
+    @FXML
+    public Button endCallButton;
+
     public boolean getConnected() { return connected; }
+
+    private void popUp(String nick){
+        popUpCall.getStyleClass().clear();
+        popUpCall.getStyleClass().add("popUpCall");
+        popUpLabel.getStyleClass().clear();
+        popUpLabel.getStyleClass().add("popUpLabel");
+        popUpHbox.getStyleClass().clear();
+        popUpHbox.getStyleClass().add("popUpHbox");
+        callButton.getStyleClass().clear();
+        callButton.getStyleClass().add("call");
+        endCallButton.getStyleClass().clear();
+        endCallButton.getStyleClass().add("endCall");
+
+        popUpLabel.setText(nick + " calls");
+    }
+
+    private void popUpClear(){
+        popUpCall.getStyleClass().clear();
+        popUpCall.getStyleClass().add("none");
+        popUpLabel.getStyleClass().clear();
+        popUpLabel.getStyleClass().add("none");
+        popUpHbox.getStyleClass().clear();
+        popUpHbox.getStyleClass().add("none");
+        callButton.getStyleClass().clear();
+        callButton.getStyleClass().add("none");
+        endCallButton.getStyleClass().clear();
+        endCallButton.getStyleClass().add("none");
+    }
 
     public void callView(String nick){
         Stage stage = (Stage) connectButton.getScene().getWindow();
@@ -62,9 +105,7 @@ public class Controller {
             double height = background.getHeight();
             double width = background.getWidth();
             Call callController = new Call(this, nick);
-//            connection.connectTo(nick);
-//            System.out.println(connection);
-//            System.out.println(nick);
+//            connection.connectTo(nick);  TODO
             loader.setController(callController);
             Parent root = loader.load();
             Scene scene = new Scene(root, width, height);
@@ -96,6 +137,7 @@ public class Controller {
             callButton.setGraphic(callImage);
             mainButton.getStyleClass().add("contact");
             callButton.getStyleClass().add("call");
+            mainButton.setOnAction(e->popUp(nick));
             callButton.setOnAction(e->callView(nick));
             hbox.getChildren().addAll(mainButton, callButton);
             hbox.getStyleClass().add("hbox");
@@ -104,11 +146,15 @@ public class Controller {
 
     }
 
+    @FXML
+    public void rejectCall(){
+        popUpClear();
+    }
+
     public void stopApp(){
         if(connected)
             try {
                 connection.disconnect();
-                thread.join();
             }catch (Exception ignored){ }
     }
 
@@ -185,6 +231,7 @@ public class Controller {
                 connection.connectSocket(ipString, Integer.parseInt(portString));
                 connection.setNick(nickString);
                 thread = new Thread(connection);
+                thread.setDaemon(true);
                 thread.start();
                 connected = true;
                 while (connectButton.getStyleClass().remove("connect")) ;

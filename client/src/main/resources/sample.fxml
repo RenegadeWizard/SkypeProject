@@ -20,7 +20,7 @@
             <right>
                 <VBox>
                     <HBox id="submits">
-                        <TextField styleClass="input" promptText="Serwer ip" maxWidth="150" fx:id="ip"></TextField>
+                        <TextField styleClass="input" promptText="Server ip" maxWidth="150" fx:id="ip"></TextField>
                         <TextField styleClass="input" promptText="port" maxWidth="75" fx:id="port"></TextField>
                         <TextField styleClass="input" promptText="nick" maxWidth="150" fx:id="nick"></TextField>
                         <Button styleClass="connect" onAction="#connect" fx:id="connectButton" prefWidth="100">Connect</Button>
@@ -36,8 +36,21 @@
     </top>
 
     <center>
-        <VBox id="contacts" fx:id="contacts">
-        </VBox>
+        <BorderPane>
+            <left>
+                <VBox id="contacts" fx:id="contacts"/>
+            </left>
+            <right>
+                <VBox styleClass="none" fx:id="popUpCall">   <!--  popUpCall  -->
+                    <Label styleClass="none" fx:id="popUpLabel"/> <!--  popUpLabel  -->
+                    <HBox styleClass="none" fx:id="popUpHbox">   <!--  popUpHbox  -->
+                        <Button styleClass="none" fx:id="callButton"/>  <!--  call  -->
+                        <Button styleClass="none" fx:id="endCallButton" onAction="#rejectCall"/>  <!--  endCall  -->
+                    </HBox>
+                </VBox>
+            </right>
+        </BorderPane>
+
 
     </center>
 </BorderPane>
