@@ -43,8 +43,7 @@ public class Connect implements Runnable{
 
     public void disconnect() throws IOException{
         String encapsulatedNick = "Disconnect";
-        OutputStream os = socket.getOutputStream();
-        os.write(encapsulatedNick.getBytes());  // TODO: receive message from server (success)
+        write(encapsulatedNick);
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         String msg = reader.readLine();
         if(msg.charAt(0) == 'D'){
@@ -54,31 +53,31 @@ public class Connect implements Runnable{
     }
 
     public void sendNick() throws IOException{
-        String encapsulatedNick = "N" + nick + "\n";
-        OutputStream os = socket.getOutputStream();
-        os.write(encapsulatedNick.getBytes());
+        String encapsulatedNick = "N" + nick;
+        write(encapsulatedNick);
         System.out.println("Sent nick");
         while(read().charAt(0) != 'Z');
     }
 
     public void requestUsersList() throws IOException{
-        String encapsulatedNick = "Lrequest\n";
-        OutputStream os = socket.getOutputStream();
-        os.write(encapsulatedNick.getBytes());
+        String encapsulatedNick = "Lrequest";
+        write(encapsulatedNick);
         System.out.println("requesting clients list");
         while(read().charAt(0) != 'S');
     }
 
     public void connectTo(String nick) throws IOException{
         String encapsulatedNick = "C" + nick;
-        OutputStream os = socket.getOutputStream();
-        os.write(encapsulatedNick.getBytes());
-        String msg = read();
-        if(msg.equals("ACC")){
-            System.out.println("Connected");
-        }else{
-            System.err.println("Could not connect");
-        }
+        write(encapsulatedNick);
+    }
+
+    public void connection(){
+        System.out.println("connected!");
+
+    }
+
+    public void notConnected(){
+        System.out.println("not connected!");
     }
 
     public String read() throws IOException{
@@ -87,6 +86,11 @@ public class Connect implements Runnable{
             line = reader.readLine();
         }
         return line;
+    }
+
+    public void write(String msg) throws IOException{
+        OutputStream os = socket.getOutputStream();
+        os.write(msg.getBytes());
     }
 
     public void receiveClients() throws IOException{
@@ -118,6 +122,12 @@ public class Connect implements Runnable{
             case 'C':
                 connectionFrom(msg.substring(1));
                 break;
+            case 'A':
+                connection();
+                break;
+            case 'F':
+                notConnected();
+                break;
             case 'D':
                 return false;
             default:
@@ -132,7 +142,7 @@ public class Connect implements Runnable{
             sendNick();
             requestUsersList();
             receiveClients();
-//            while(receiveFromServer()) ;
+            while(receiveFromServer()) ;
         }catch (IOException ignored) { }
     }
 }

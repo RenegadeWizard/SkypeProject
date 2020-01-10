@@ -10,12 +10,16 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sample/Connect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sample/Connect.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/sample/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sample/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/sample/Connect.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/sample/Connect.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/sample/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/sample/Controller.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../server/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../server/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/Server.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../server/Server.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/Server.h" beforeDir="false" afterPath="$PROJECT_DIR$/../server/Server.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/CXX.includecache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/Communication.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/Communication.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/Connection.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/Connection.cpp.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/Server.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/Server.cpp.o" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/depend.internal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/depend.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/flags.make" beforeDir="false" afterPath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/flags.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/link.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/main.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/../server/cmake-build-debug/CMakeFiles/server.dir/main.cpp.o" afterDir="false" />
@@ -256,7 +260,7 @@
       <workItem from="1578307525678" duration="3457000" />
       <workItem from="1578505644482" duration="5608000" />
       <workItem from="1578576648176" duration="12494000" />
-      <workItem from="1578659273613" duration="8948000" />
+      <workItem from="1578659273613" duration="17424000" />
     </task>
     <servers />
   </component>
@@ -284,38 +288,42 @@
       <screen x="0" y="23" width="1440" height="813" />
     </state>
     <state x="458" y="183" key="#com.intellij.refactoring.typeMigration.ui.FailedConversionsDialog/0.23.1440.813@0.23.1440.813" timestamp="1578578772522" />
-    <state width="1398" height="181" key="GridCell.Tab.0.bottom" timestamp="1578669013998">
+    <state x="483" y="140" key="#xdebugger.evaluate" timestamp="1578680611942">
       <screen x="0" y="23" width="1440" height="813" />
     </state>
-    <state width="1398" height="181" key="GridCell.Tab.0.bottom/0.23.1440.813@0.23.1440.813" timestamp="1578669013998" />
-    <state width="1398" height="181" key="GridCell.Tab.0.center" timestamp="1578669013994">
+    <state x="483" y="140" key="#xdebugger.evaluate/0.23.1440.813@0.23.1440.813" timestamp="1578680611942" />
+    <state width="1398" height="181" key="GridCell.Tab.0.bottom" timestamp="1578686357488">
       <screen x="0" y="23" width="1440" height="813" />
     </state>
-    <state width="1398" height="181" key="GridCell.Tab.0.center/0.23.1440.813@0.23.1440.813" timestamp="1578669013994" />
-    <state width="1398" height="181" key="GridCell.Tab.0.left" timestamp="1578669013993">
+    <state width="1398" height="181" key="GridCell.Tab.0.bottom/0.23.1440.813@0.23.1440.813" timestamp="1578686357488" />
+    <state width="1398" height="181" key="GridCell.Tab.0.center" timestamp="1578686357487">
       <screen x="0" y="23" width="1440" height="813" />
     </state>
-    <state width="1398" height="181" key="GridCell.Tab.0.left/0.23.1440.813@0.23.1440.813" timestamp="1578669013993" />
-    <state width="1398" height="181" key="GridCell.Tab.0.right" timestamp="1578669013995">
+    <state width="1398" height="181" key="GridCell.Tab.0.center/0.23.1440.813@0.23.1440.813" timestamp="1578686357487" />
+    <state width="1398" height="181" key="GridCell.Tab.0.left" timestamp="1578686357487">
       <screen x="0" y="23" width="1440" height="813" />
     </state>
-    <state width="1398" height="181" key="GridCell.Tab.0.right/0.23.1440.813@0.23.1440.813" timestamp="1578669013995" />
-    <state width="1398" height="259" key="GridCell.Tab.1.bottom" timestamp="1578668992065">
+    <state width="1398" height="181" key="GridCell.Tab.0.left/0.23.1440.813@0.23.1440.813" timestamp="1578686357487" />
+    <state width="1398" height="181" key="GridCell.Tab.0.right" timestamp="1578686357488">
       <screen x="0" y="23" width="1440" height="813" />
     </state>
-    <state width="1398" height="259" key="GridCell.Tab.1.bottom/0.23.1440.813@0.23.1440.813" timestamp="1578668992065" />
-    <state width="1398" height="259" key="GridCell.Tab.1.center" timestamp="1578668992064">
+    <state width="1398" height="181" key="GridCell.Tab.0.right/0.23.1440.813@0.23.1440.813" timestamp="1578686357488" />
+    <state width="1398" height="196" key="GridCell.Tab.1.bottom" timestamp="1578684849946">
       <screen x="0" y="23" width="1440" height="813" />
     </state>
-    <state width="1398" height="259" key="GridCell.Tab.1.center/0.23.1440.813@0.23.1440.813" timestamp="1578668992064" />
-    <state width="1398" height="259" key="GridCell.Tab.1.left" timestamp="1578668992062">
+    <state width="1398" height="196" key="GridCell.Tab.1.bottom/0.23.1440.813@0.23.1440.813" timestamp="1578684849946" />
+    <state width="1398" height="196" key="GridCell.Tab.1.center" timestamp="1578684849945">
       <screen x="0" y="23" width="1440" height="813" />
     </state>
-    <state width="1398" height="259" key="GridCell.Tab.1.left/0.23.1440.813@0.23.1440.813" timestamp="1578668992062" />
-    <state width="1398" height="259" key="GridCell.Tab.1.right" timestamp="1578668992065">
+    <state width="1398" height="196" key="GridCell.Tab.1.center/0.23.1440.813@0.23.1440.813" timestamp="1578684849945" />
+    <state width="1398" height="196" key="GridCell.Tab.1.left" timestamp="1578684849944">
       <screen x="0" y="23" width="1440" height="813" />
     </state>
-    <state width="1398" height="259" key="GridCell.Tab.1.right/0.23.1440.813@0.23.1440.813" timestamp="1578668992065" />
+    <state width="1398" height="196" key="GridCell.Tab.1.left/0.23.1440.813@0.23.1440.813" timestamp="1578684849944" />
+    <state width="1398" height="196" key="GridCell.Tab.1.right" timestamp="1578684849946">
+      <screen x="0" y="23" width="1440" height="813" />
+    </state>
+    <state width="1398" height="196" key="GridCell.Tab.1.right/0.23.1440.813@0.23.1440.813" timestamp="1578684849946" />
     <state x="229" y="68" key="SettingsEditor" timestamp="1578590989988">
       <screen x="0" y="23" width="1440" height="813" />
     </state>
@@ -330,48 +338,28 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/sample/Connect.java</url>
-          <line>88</line>
-          <option name="timeStamp" value="4" />
+          <line>84</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/sample/Controller.java</url>
+          <line>111</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/sample/Connect.java</url>
+          <line>70</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/sample/Connect.java</url>
+          <line>87</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/sample/Connect.java</url>
           <line>85</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/sample/Connect.java</url>
-          <line>132</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/sample/Connect.java</url>
-          <line>133</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/sample/Connect.java</url>
-          <line>92</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/sample/Connect.java</url>
-          <line>94</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/sample/Connect.java</url>
-          <line>95</line>
-          <option name="timeStamp" value="12" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/sample/Connect.java</url>
-          <line>100</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/sample/Connect.java</url>
-          <line>97</line>
-          <option name="timeStamp" value="14" />
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

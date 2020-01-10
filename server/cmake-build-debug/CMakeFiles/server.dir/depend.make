@@ -5,6 +5,7 @@ CMakeFiles/server.dir/Communication.cpp.o: ../Communication.cpp
 CMakeFiles/server.dir/Communication.cpp.o: ../Communication.h
 CMakeFiles/server.dir/Communication.cpp.o: ../Connection.h
 
+CMakeFiles/server.dir/Connection.cpp.o: ../Communication.h
 CMakeFiles/server.dir/Connection.cpp.o: ../Connection.cpp
 CMakeFiles/server.dir/Connection.cpp.o: ../Connection.h
 

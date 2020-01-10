@@ -20,6 +20,7 @@ void Connection::handleConnection() {
     }
     Connection *c = nullptr;
     Communication *com = nullptr;   // TODO: Delete pointers after the thing
+    char* tmp = new char(100);
     switch (buff[0]) {
         case 'N':
             std::cout << "Nick: ";
@@ -28,8 +29,13 @@ void Connection::handleConnection() {
             sendData(confbuf);
             break;
         case 'C':
-           std::cout << "Connect to: ";
+            std::cout << "Connect to: ";
             c = getConnection(++buff);
+            std::cout << buff << "\n";
+            strcpy(tmp, "C");
+            strcat(tmp, nick);
+            c->sendData(tmp);
+            sendData((char*) "A\n");
             //TODO: Tworzenie wątku communication
             //connect(conn, c);
             break;

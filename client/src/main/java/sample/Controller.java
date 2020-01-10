@@ -109,7 +109,7 @@ public class Controller {
             double height = background.getHeight();
             double width = background.getWidth();
             Call callController = new Call(this, nick);
-//            connection.connectTo(nick);  TODO
+            connection.connectTo(nick);  // TODO
             loader.setController(callController);
             Parent root = loader.load();
             Scene scene = new Scene(root, width, height);
@@ -123,9 +123,9 @@ public class Controller {
     public void listClients(){
         contacts.getChildren().clear();
         for(String nick : connection.getUsers()){
-//            if(nick.equals(connection.getNick())){    TODO: Don't show yourself
-//                continue;
-//            }
+            if(nick.equals(connection.getNick())){    // TODO: Don't show yourself
+                continue;
+            }
             HBox hbox = new HBox();
             Button mainButton = new Button();
             Image image = new Image("img/default-profile.jpg");

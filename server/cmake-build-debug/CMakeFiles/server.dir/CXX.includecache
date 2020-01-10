@@ -10,34 +10,24 @@
 Connection.h
 /Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
 
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.cpp
+Connection.h
 /Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
+Communication.h
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.h
+
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
+map
+-
 sys/socket.h
 -
 unistd.h
 -
-stdio.h
--
-stdlib.h
--
-netinet/in.h
--
-
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.cpp
-Server.h
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
-
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
-map
+cstring
 -
 string
 -
-unistd.h
--
 stdio.h
--
-iostream
--
-sys/socket.h
 -
 stdlib.h
 -
@@ -45,16 +35,6 @@ netinet/in.h
 -
 thread
 -
-Connection.h
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
-Communication.h
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.h
-
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/main.cpp
 iostream
 -
-string
--
-Server.h
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
 

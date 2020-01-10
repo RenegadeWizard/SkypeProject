@@ -17,6 +17,7 @@
 #include <netinet/in.h>
 #include <thread>
 #include <vector>
+#include <sys/types.h>
 
 #include "Connection.h"
 #include "Communication.h"
