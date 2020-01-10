@@ -8,6 +8,7 @@
 
 #include <map>
 #include <string>
+#include <cstring>
 #include <unistd.h>
 #include <stdio.h>
 #include <iostream>
@@ -15,6 +16,7 @@
 #include <stdlib.h>
 #include <netinet/in.h>
 #include <thread>
+#include <vector>
 
 #include "Connection.h"
 #include "Communication.h"
@@ -24,6 +26,7 @@ class Server {
 private:
     std::map<char*, Connection*> connTable;
     int serverSocket;
+    std::vector<std::thread*> threadTab;
 public:
     Server(int);
     ~Server();
