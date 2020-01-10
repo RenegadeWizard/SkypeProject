@@ -1,6 +1,8 @@
 package sample;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
@@ -69,6 +71,8 @@ public class Controller {
     public Button endCallButton;
 
     public boolean getConnected() { return connected; }
+
+    private BooleanProperty isReceivingConn;
 
     private void popUp(String nick){
         popUpCall.getStyleClass().clear();
@@ -141,7 +145,10 @@ public class Controller {
             callButton.setOnAction(e->callView(nick));
             hbox.getChildren().addAll(mainButton, callButton);
             hbox.getStyleClass().add("hbox");
-            contacts.getChildren().add(hbox);
+            VBox container = new VBox();
+            Label nickLabel = new Label(nick);
+            container.getChildren().addAll(hbox, nickLabel);
+            contacts.getChildren().add(container);
         }
 
     }
@@ -230,6 +237,8 @@ public class Controller {
                 nickString = nick.getText();
                 connection.connectSocket(ipString, Integer.parseInt(portString));
                 connection.setNick(nickString);
+                isReceivingConn = new SimpleBooleanProperty(connection.isWantsToConnect());
+                isReceivingConn.addListener(e->popUp(connection.getNickFrom()));
                 thread = new Thread(connection);
                 thread.setDaemon(true);
                 thread.start();
@@ -247,12 +256,6 @@ public class Controller {
             info.setText("Connected!");
             while (info.getStyleClass().remove("not_connected")) ;
             info.getStyleClass().add("connected");
-//            try {
-//                connection.requestUsersList();
-//                connection.receiveInfo();
-//            } catch (IOException e) {
-//                System.err.println("Request user list failed");
-//            }
         }else{
             stopApp();
             unlistClients();

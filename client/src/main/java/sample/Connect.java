@@ -5,13 +5,25 @@ import javafx.collections.ObservableList;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 
 public class Connect implements Runnable{
     private Socket socket;
     private ObservableList<String> users;
+
+    public boolean isWantsToConnect() {
+        return wantsToConnect;
+    }
+
     private boolean wantsToConnect = false;
+
+    public String getNickFrom() {
+        return nickFrom;
+    }
+
+    private String nickFrom;
     private String nick;
+    private BufferedReader reader;
+
 
     public String getNick() { return nick; }
     public void setNick(String nick) { this.nick = nick; }
@@ -26,6 +38,7 @@ public class Connect implements Runnable{
 
     public void connectSocket(String serverIp, int port) throws IOException{
         socket = new Socket(serverIp, port);
+        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
 
     public void disconnect() throws IOException{
@@ -41,23 +54,26 @@ public class Connect implements Runnable{
     }
 
     public void sendNick() throws IOException{
-        String encapsulatedNick = "N" + nick;
+        String encapsulatedNick = "N" + nick + "\n";
         OutputStream os = socket.getOutputStream();
         os.write(encapsulatedNick.getBytes());
+        System.out.println("Sent nick");
+        while(read().charAt(0) != 'Z');
     }
 
     public void requestUsersList() throws IOException{
-        String encapsulatedNick = "Lrequest";
+        String encapsulatedNick = "Lrequest\n";
         OutputStream os = socket.getOutputStream();
         os.write(encapsulatedNick.getBytes());
+        System.out.println("requesting clients list");
+        while(read().charAt(0) != 'S');
     }
 
     public void connectTo(String nick) throws IOException{
         String encapsulatedNick = "C" + nick;
         OutputStream os = socket.getOutputStream();
         os.write(encapsulatedNick.getBytes());
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String msg = reader.readLine();
+        String msg = read();
         if(msg.equals("ACC")){
             System.out.println("Connected");
         }else{
@@ -65,11 +81,18 @@ public class Connect implements Runnable{
         }
     }
 
-    public void receiveInfo() throws IOException{
+    public String read() throws IOException{
+        String line = reader.readLine();
+        while (line.isEmpty()){
+            line = reader.readLine();
+        }
+        return line;
+    }
+
+    public void receiveClients() throws IOException{
         users.clear();
         while(true){
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String msg = reader.readLine();
+            String msg = read();
             if(msg.charAt(0) == 'E')
                 break;
             if(msg.substring(1).equals("clients")) {
@@ -80,12 +103,36 @@ public class Connect implements Runnable{
         }
     }
 
+    public void connectionFrom(String nick){
+        System.out.println(nick);
+        nickFrom = nick;
+        wantsToConnect = true;
+    }
+
+    public boolean receiveFromServer() throws IOException{
+        String msg = read();
+        switch (msg.charAt(0)){
+            case 'S':
+                receiveClients();
+                break;
+            case 'C':
+                connectionFrom(msg.substring(1));
+                break;
+            case 'D':
+                return false;
+            default:
+                break;
+        }
+        return true;
+    }
+
     @Override
     public void run() {
         try {
             sendNick();
             requestUsersList();
-            receiveInfo();
+            receiveClients();
+//            while(receiveFromServer()) ;
         }catch (IOException ignored) { }
     }
 }
