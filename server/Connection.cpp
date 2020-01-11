@@ -31,7 +31,7 @@ void Connection::handleConnection() {
         case 'C':
             std::cout << "Connect to: ";
             c = getConnection(++buff);
-            std::cout << buff << "\n";
+            //std::cout << buff << "\n";
             strcpy(tmp, "C");
             strcat(tmp, nick);
             c->sendData(tmp);
