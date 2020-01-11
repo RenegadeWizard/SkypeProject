@@ -6,6 +6,14 @@
 
 #IncludeRegexTransform: 
 
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.cpp
+cstring
+-
+cstdio
+-
+Communication.h
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.h
+
 /Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.h
 Connection.h
 /Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
@@ -37,4 +45,46 @@ thread
 -
 iostream
 -
+
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.cpp
+Server.h
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
+
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
+map
+-
+string
+-
+cstring
+-
+unistd.h
+-
+stdio.h
+-
+iostream
+-
+sys/socket.h
+-
+stdlib.h
+-
+netinet/in.h
+-
+thread
+-
+vector
+-
+sys/types.h
+-
+Connection.h
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
+Communication.h
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.h
+
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/main.cpp
+iostream
+-
+string
+-
+Server.h
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
 

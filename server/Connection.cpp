@@ -5,7 +5,7 @@
 #include "Connection.h"
 #include "Communication.h"
 
-Connection::Connection(int socketHandle, std::map<char*, Connection*> *conns) {
+Connection::Connection(int socketHandle, std::map<char*, Connection*>& conns) {
     socket = socketHandle;
     connTable = conns;
 }
@@ -71,7 +71,7 @@ void Connection::setSocket(int socket) {
 }
 
 void Connection::addConn(char* nick, Connection* conn) {
-    (*connTable)[nick] = conn;
+    connTable[nick] = conn;
 }
 
 void Connection::operator()() {
@@ -86,7 +86,7 @@ void Connection::sendInfo() {
     strcat(wholeInfo, "clients\n");
     sendData(wholeInfo);
     sleep(1);
-    for(auto c : (*connTable)){
+    for(auto c : connTable){
         strcpy(wholeInfo, "I");
         strcat(wholeInfo, c.first);
         strcat(wholeInfo, "\n");
@@ -100,9 +100,9 @@ void Connection::sendInfo() {
 }
 
 void Connection::disconnect() {
-    for(auto a : (*connTable))
+    for(auto a : connTable)
         if(a.second == this) {
-            (*connTable).erase(a.first);
+            connTable.erase(a.first);
             break;
         }
     sendData((char*)"Disconnected");
@@ -111,5 +111,5 @@ void Connection::disconnect() {
 }
 
 Connection* Connection::getConnection(char* nick) {
-    return (*connTable)[nick];
+    return connTable[nick];
 }

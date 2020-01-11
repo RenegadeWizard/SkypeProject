@@ -47,13 +47,11 @@ void Server::run() {
     //std::thread *threadTab[10];
     while(true){
         int sock = accept(serverSocket, nullptr, nullptr);
-        Connection conn(sock, &connTable);
+        Connection conn(sock, connTable);
         std::cout << "Accepted connection at " << sock << "\n";
         threadTab.push_back(new std::thread(conn));
         std::cout << "Created connection thread for " << sock << "\n";
-        while(connTable.empty()){
-
-        }
+        while(connTable.empty()){}
 //        std::cout << "Nie fajnie!";
 //        try{
 //            while (true){

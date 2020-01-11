@@ -18,7 +18,7 @@
 
 class Connection {
 public:
-    Connection(int, std::map<char*, Connection*>*);
+    Connection(int, std::map<char*, Connection*>&);
     ~Connection();
     void operator()();
     void handleConnection();
@@ -35,7 +35,7 @@ public:
 private:
     int socket;
     char* nick;
-    std::map<char*, Connection*> *connTable;
+    std::map<char*, Connection*> connTable;
 };
 
 
