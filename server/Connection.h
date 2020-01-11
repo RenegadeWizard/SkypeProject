@@ -15,27 +15,37 @@
 #include <netinet/in.h>
 #include <thread>
 #include <iostream>
+#include <mutex>
 
 class Connection {
 public:
-    Connection(int, std::map<char*, Connection*>&);
+    Connection(int, std::map<std::string, Connection*>&);
     ~Connection();
     void operator()();
     void handleConnection();
-    char* readData();
-    void addConn(char*, Connection*);
+    char* readData(int);
+    void addConn(std::string, Connection*);
     void sendData(char*);
     int getSocket() const;
     void disconnect();
     void setSocket(int socket);
-    void setNick(char* nick) { this->nick = nick; }
-    char* getNick() { return nick; }
+    void setNick(std::string nick) { this->connNick = nick; }
+    std::string getNick() { return connNick; }
     void sendInfo();
     Connection* getConnection(char*);
+    bool checkIfBusy();
+    void unlockMtx();
+    void handleCall(Connection*);
+    void setHasAccepted(bool);
+    void setCall(bool);
 private:
     int socket;
-    char* nick;
-    std::map<char*, Connection*> connTable;
+    bool isBusy = false;
+    bool hasAccepted = false;
+    bool call = false;
+    std::string connNick;
+    std::map<std::string, Connection*> &connTable;
+    std::shared_ptr<std::mutex> mtx;
 };
 
 

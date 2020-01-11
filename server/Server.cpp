@@ -11,13 +11,14 @@ Server::Server(int port) {
     serverAddr.sin_addr.s_addr = htonl(INADDR_ANY);
     serverAddr.sin_port = htons(port);
 
-    char reuseAddrVal = 1;
+    long reuseAddrVal = 1;
+    size_t sizeReuse = sizeof(reuseAddrVal) ;
     if((serverSocket = socket(AF_INET, SOCK_STREAM, 0)) < 0){
         throw "Could not create socket\n";
     }
     std::cout << "Created socket at " << serverSocket << "\n";
 
-    if(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, (char*)&reuseAddrVal, sizeof(reuseAddrVal)) < 0){
+    if(setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, &reuseAddrVal, sizeReuse) < 0){
         std::cerr << "Could not set options for socket\n";
     }
 
@@ -38,7 +39,7 @@ Server::~Server(){
 //void Server::addConn(char* nick, Connection* conn) {
 //    connTable[nick] = conn;
 //}
-
+#include <functional>
 void Server::run() {
 
     if(listen(serverSocket, 5) < 0){
@@ -51,7 +52,7 @@ void Server::run() {
         std::cout << "Accepted connection at " << sock << "\n";
         threadTab.push_back(new std::thread(conn));
         std::cout << "Created connection thread for " << sock << "\n";
-        while(connTable.empty()){}
+//        while(connTable.empty()){}
 //        std::cout << "Nie fajnie!";
 //        try{
 //            while (true){
