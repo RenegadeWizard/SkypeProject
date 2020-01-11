@@ -14,10 +14,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Call {
+public class Call implements Runnable{
 
     private Controller controller;
     private String nick;
+    private Connect connection;
+    private double width;
+    private double height;
 
     @FXML
     private BorderPane background;
@@ -25,14 +28,18 @@ public class Call {
     @FXML
     private Button endCallButton;
 
-    public Call(Controller controller, String nick){
+    public Call(Controller controller, String nick, Connect connection){
         this.controller = controller;
         this.nick = nick;
+        this.connection = connection;
     }
 
     private void endCall(){
         double height = background.getHeight();
         double width = background.getWidth();
+        try {
+            connection.write("G");
+        }catch (IOException ignored) {}
         Stage stage = (Stage) background.getScene().getWindow();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample.fxml"));
@@ -46,11 +53,22 @@ public class Call {
         }
     }
 
+    public void reload(){
+        Image frame = connection.getImage();
+        if(frame != null){
+            connection.sendImage();
+            BackgroundImage myImage = new BackgroundImage(frame, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+            background.setBackground(new Background(myImage));
+        }else{
+            endCall();
+        }
+    }
+
     @FXML
     public void initialize(){
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        double height = primaryScreenBounds.getWidth() * 0.495;
-        double width = primaryScreenBounds.getWidth() * 0.8;
+        height = primaryScreenBounds.getWidth() * 0.495;
+        width = primaryScreenBounds.getWidth() * 0.8;
         BackgroundImage myImage = new BackgroundImage(new Image("img/pewdiepie.jpg", width, height, false,false), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
         background.setBackground(new Background(myImage));
         endCallButton.setOnAction(e->endCall());
@@ -58,5 +76,10 @@ public class Call {
         imageView.setFitHeight(30);
         imageView.setFitWidth(30);
         endCallButton.setGraphic(imageView);
+    }
+
+    @Override
+    public void run() {
+        while(true) {reload();}
     }
 }

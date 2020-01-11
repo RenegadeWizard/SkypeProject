@@ -2,9 +2,12 @@ package sample;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelFormat;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class Connect implements Runnable{
     private Socket socket;
@@ -73,7 +76,6 @@ public class Connect implements Runnable{
 
     public void connection(){
         System.out.println("connected!");
-
     }
 
     public void notConnected(){
@@ -113,6 +115,42 @@ public class Connect implements Runnable{
         wantsToConnect = true;
     }
 
+    public Image getImage(){
+        try {
+            String s = read();
+            Image img = null;
+            if(s.charAt(0) == 'P'){
+                img = new Image(new ByteArrayInputStream(s.substring(1).getBytes()));
+            }else if(s.charAt(0) == 'G'){
+                img = null;
+            }
+            return img;
+        }catch (IOException ignored){}
+        return null;
+    }
+
+    public void sendImage(){
+        try {
+            Image img = imgFromVideo("img/pewdiepie2.jpg");
+            int w = (int)img.getWidth();
+            int h = (int)img.getHeight();
+            byte[] buf = new byte[w * h * 4];
+            img.getPixelReader().getPixels(0, 0, w, h, PixelFormat.getByteBgraInstance(), buf, 0, w * 4);
+            String s = new String(buf);
+            s = "P" + s;
+            write(s);
+        }catch (IOException ignored) {}
+    }
+
+    private Image imgFromVideo(String file) throws IOException{
+        Image frame = new Image(new FileInputStream(file));
+        return frame;
+    }
+
+    private Image imgFromCam() throws IOException{
+        return null;
+    }
+
     public boolean receiveFromServer() throws IOException{
         String msg = read();
         switch (msg.charAt(0)){
@@ -125,7 +163,7 @@ public class Connect implements Runnable{
             case 'A':
                 connection();
                 break;
-            case 'F':
+            case 'R':
                 notConnected();
                 break;
             case 'D':

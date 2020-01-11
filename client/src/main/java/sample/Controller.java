@@ -102,19 +102,23 @@ public class Controller {
         endCallButton.getStyleClass().add("none");
     }
 
-    public void callView(String nick){
+    public void changeToCall(String nick) throws IOException{
         Stage stage = (Stage) connectButton.getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/call.fxml"));
+        double height = background.getHeight();
+        double width = background.getWidth();
+        Call callController = new Call(this, nick, connection);
+        loader.setController(callController);
+        Parent root = loader.load();
+        Scene scene = new Scene(root, width, height);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void callView(String nick){
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/call.fxml"));
-            double height = background.getHeight();
-            double width = background.getWidth();
-            Call callController = new Call(this, nick);
             connection.connectTo(nick);  // TODO
-            loader.setController(callController);
-            Parent root = loader.load();
-            Scene scene = new Scene(root, width, height);
-            stage.setScene(scene);
-            stage.show();
+            changeToCall(nick);
         }catch (IOException e){
             System.err.println("Could not find call.fxml");
         }
@@ -154,8 +158,16 @@ public class Controller {
     }
 
     @FXML
-    public void rejectCall(){
+    public void rejectCall() throws IOException{
         popUpClear();
+        connection.write("R" + connection.getNickFrom());
+    }
+
+    @FXML
+    public void acceptCall() throws IOException{
+        popUpClear();
+        connection.write("A" + connection.getNickFrom());
+        changeToCall(connection.getNickFrom());
     }
 
     public void stopApp(){
