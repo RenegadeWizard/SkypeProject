@@ -18,27 +18,27 @@
 #include <thread>
 #include <vector>
 #include <sys/types.h>
+#include <mutex>
 
 #include "Connection.h"
-#include "Communication.h"
 
 
 class Server {
 private:
-    std::map<char*, Connection*> connTable;
+    std::map<std::string, Connection*> connTable;
     int serverSocket;
     std::vector<std::thread*> threadTab;
 public:
     Server(int);
     ~Server();
-    Connection* getConnection(char*);
-    void addConn(char*, Connection*);
+    //Connection* getConnection(char*);
+    //void addConn(char*, Connection*);
     void run();
-    void readInfo(Connection*);
-    void disconnect(Connection*);
-    void connect(Connection*, Connection*);
-    void sendInfo(Connection*);
-    void sendToEverybody();
+    //void readInfo(Connection*);
+    //void disconnect(Connection*);
+    //void connect(Connection*, Connection*);
+    //void sendInfo(Connection*);
+    //void sendToEverybody();
 };
 
 

@@ -6,25 +6,11 @@
 
 #IncludeRegexTransform: 
 
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.cpp
-cstring
--
-cstdio
--
-Communication.h
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.h
-
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.h
+/home/krzysztof/Dokumenty/SkypeProject/server/Connection.cpp
 Connection.h
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
+/home/krzysztof/Dokumenty/SkypeProject/server/Connection.h
 
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.cpp
-Connection.h
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
-Communication.h
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.h
-
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
+/home/krzysztof/Dokumenty/SkypeProject/server/Connection.h
 map
 -
 sys/socket.h
@@ -45,12 +31,16 @@ thread
 -
 iostream
 -
+mutex
+-
 
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.cpp
+/home/krzysztof/Dokumenty/SkypeProject/server/Server.cpp
 Server.h
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
+/home/krzysztof/Dokumenty/SkypeProject/server/Server.h
+functional
+-
 
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
+/home/krzysztof/Dokumenty/SkypeProject/server/Server.h
 map
 -
 string
@@ -75,16 +65,16 @@ vector
 -
 sys/types.h
 -
+mutex
+-
 Connection.h
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.h
-Communication.h
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Communication.h
+/home/krzysztof/Dokumenty/SkypeProject/server/Connection.h
 
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/main.cpp
+/home/krzysztof/Dokumenty/SkypeProject/server/main.cpp
 iostream
 -
 string
 -
 Server.h
-/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.h
+/home/krzysztof/Dokumenty/SkypeProject/server/Server.h
 
