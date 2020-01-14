@@ -1,0 +1,41 @@
+\documentclass[a4paper]{article}
+
+%% Language and font encodings
+\usepackage[english,polish]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{subfloat}
+
+%% Sets page size and margins.00
+\usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+%% Useful packages
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{float}
+\usepackage{subfig}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
+
+\begin{document}
+	\begin{center}
+		{\huge Sieci Komputerowe 2} \\
+		{\LARGE Projekt komunikatora typu skype}\\
+		Krzysztof Sychla (136807),
+		Damian Wędzikowski (136826)
+	\end{center}
+	
+	\section*{Temat}
+	
+	\section*{Działanie}
+		Serwer po uruchomieniu rozpoczyna swoją pracę skonfigurowaniu gniazda sieciowego, po czym akceptuje przychodzące połączenia od klientów, a następnie tworzy wątek obsługi dla każdego z nich. Zadaniem tych wątków jest czytanie przychodzących ramek od klientów. Ramki te rozpoczynają się od nagłówków.
+		\subsection*{Nagłówki analizowane po stronie serwera}
+		\begin{itemize}
+			\item N - przyjęcie wysłanego nicku i wpisanie go do mapy, współdzielonej między wszystkimi wątkami
+			\item L - odesłanie klientowi listy wszystkich połąćzeń w systemie
+			\item D - obsługa proźby o rozłączenie klienta
+			\item C - obsługa prośby o połączenie z innym klientem, po czym przejście do funkcji zajmującej się przesyłaniem klatek między klientami
+			\item A - 
+		\end{itemize}
+	
+\end{document}
