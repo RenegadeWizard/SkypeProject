@@ -54,9 +54,9 @@ public class Call implements Runnable{
     }
 
     public void reload(){
+        connection.sendImage();
         Image frame = connection.getImage();
         if(frame != null){
-            connection.sendImage();
             BackgroundImage myImage = new BackgroundImage(frame, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
             background.setBackground(new Background(myImage));
         }else{
@@ -80,6 +80,6 @@ public class Call implements Runnable{
 
     @Override
     public void run() {
-        while(true) {reload();}
+        while(true) { reload(); }
     }
 }

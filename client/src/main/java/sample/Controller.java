@@ -108,6 +108,9 @@ public class Controller {
         double height = background.getHeight();
         double width = background.getWidth();
         Call callController = new Call(this, nick, connection);
+        Thread thCall = new Thread(callController);
+//        thCall.setDaemon(true);
+        thCall.start();
         loader.setController(callController);
         Parent root = loader.load();
         Scene scene = new Scene(root, width, height);
@@ -249,8 +252,7 @@ public class Controller {
                 nickString = nick.getText();
                 connection.connectSocket(ipString, Integer.parseInt(portString));
                 connection.setNick(nickString);
-                isReceivingConn = new SimpleBooleanProperty(connection.isWantsToConnect());
-                isReceivingConn.addListener(e->popUp(connection.getNickFrom()));
+                connection.isWantsToConnect().addListener(e->popUp(connection.getNickFrom()));
                 thread = new Thread(connection);
                 thread.setDaemon(true);
                 thread.start();

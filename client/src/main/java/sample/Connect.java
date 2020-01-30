@@ -1,10 +1,14 @@
 package sample;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelFormat;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
@@ -13,11 +17,11 @@ public class Connect implements Runnable{
     private Socket socket;
     private ObservableList<String> users;
 
-    public boolean isWantsToConnect() {
+    public BooleanProperty isWantsToConnect() {
         return wantsToConnect;
     }
 
-    private boolean wantsToConnect = false;
+    private BooleanProperty wantsToConnect = new SimpleBooleanProperty(false);
 
     public String getNickFrom() {
         return nickFrom;
@@ -26,6 +30,7 @@ public class Connect implements Runnable{
     private String nickFrom;
     private String nick;
     private BufferedReader reader;
+    private int howMuch = -1;
 
 
     public String getNick() { return nick; }
@@ -47,11 +52,8 @@ public class Connect implements Runnable{
     public void disconnect() throws IOException{
         String encapsulatedNick = "Disconnect";
         write(encapsulatedNick);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String msg = reader.readLine();
-        if(msg.charAt(0) == 'D'){
-            System.out.println("Disconnected!");
-        }
+        while (read().charAt(0) != 'D');
+        System.out.println("Disconnected!");
         socket.close();
     }
 
@@ -83,15 +85,23 @@ public class Connect implements Runnable{
     }
 
     public String read() throws IOException{
-        String line = reader.readLine();
-        while (line.isEmpty()){
-            line = reader.readLine();
+        StringBuilder line = new StringBuilder(reader.readLine());
+        int ile = line.length();
+        if(line.charAt(0) == 'O'){
+            System.out.println("Bytes: " + line.substring(1));
+            howMuch = Integer.parseInt(line.substring(1)) - 1;
+        }else{
+            while (ile < howMuch){
+                line.append(reader.readLine());
+                ile += line.length();
+            }
         }
-        return line;
+        return line.toString();
     }
 
     public void write(String msg) throws IOException{
         OutputStream os = socket.getOutputStream();
+        os.write(("O" + msg.length() + "\n").getBytes());
         os.write(msg.getBytes());
     }
 
@@ -101,7 +111,7 @@ public class Connect implements Runnable{
             String msg = read();
             if(msg.charAt(0) == 'E')
                 break;
-            if(msg.substring(1).equals("clients")) {
+            if(msg.substring(1).equals("clients") || msg.charAt(0) == 'O') {
                 continue;
             }
             System.out.println(msg.substring(1));
@@ -112,26 +122,33 @@ public class Connect implements Runnable{
     public void connectionFrom(String nick){
         System.out.println(nick);
         nickFrom = nick;
-        wantsToConnect = true;
+        wantsToConnect.setValue(true);
     }
 
     public Image getImage(){
         try {
+            System.out.println("Receive good before read");
             String s = read();
+            System.out.println("Receive good after read");
             Image img = null;
             if(s.charAt(0) == 'P'){
                 img = new Image(new ByteArrayInputStream(s.substring(1).getBytes()));
             }else if(s.charAt(0) == 'G'){
                 img = null;
             }
+
             return img;
-        }catch (IOException ignored){}
+        }catch (IOException ignored){
+            System.err.println("Receive image not good");
+        }
         return null;
     }
 
     public void sendImage(){
         try {
             Image img = imgFromVideo("img/pewdiepie2.jpg");
+            BufferedImage image = ImageIO.read(new File("img/pewdiepie2.jpg"));
+            String d = image.toString();
             int w = (int)img.getWidth();
             int h = (int)img.getHeight();
             byte[] buf = new byte[w * h * 4];
@@ -139,11 +156,15 @@ public class Connect implements Runnable{
             String s = new String(buf);
             s = "P" + s;
             write(s);
-        }catch (IOException ignored) {}
+            System.out.println("Send good");
+        }catch (IOException ignored) {
+            System.err.println("Send image not good");
+            ignored.printStackTrace();
+        }
     }
 
     private Image imgFromVideo(String file) throws IOException{
-        Image frame = new Image(new FileInputStream(file));
+        Image frame = new Image(file);
         return frame;
     }
 
