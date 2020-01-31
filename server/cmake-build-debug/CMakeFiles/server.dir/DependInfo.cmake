@@ -4,11 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/krzysztof/Dokumenty/SkypeProject/server/Connection.cpp" "/home/krzysztof/Dokumenty/SkypeProject/server/cmake-build-debug/CMakeFiles/server.dir/Connection.cpp.o"
-  "/home/krzysztof/Dokumenty/SkypeProject/server/Server.cpp" "/home/krzysztof/Dokumenty/SkypeProject/server/cmake-build-debug/CMakeFiles/server.dir/Server.cpp.o"
-  "/home/krzysztof/Dokumenty/SkypeProject/server/main.cpp" "/home/krzysztof/Dokumenty/SkypeProject/server/cmake-build-debug/CMakeFiles/server.dir/main.cpp.o"
+  "/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Connection.cpp" "/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/cmake-build-debug/CMakeFiles/server.dir/Connection.cpp.o"
+  "/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/Server.cpp" "/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/cmake-build-debug/CMakeFiles/server.dir/Server.cpp.o"
+  "/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/main.cpp" "/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/cmake-build-debug/CMakeFiles/server.dir/main.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "AppleClang")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH

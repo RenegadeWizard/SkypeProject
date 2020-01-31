@@ -96,7 +96,40 @@ public class Connect implements Runnable{
                 ile += line.length();
             }
         }
+        System.out.println(line);
         return line.toString();
+    }
+
+    public String readLow(int bytes) throws IOException{
+        char[] buff = new char[bytes];
+        reader.read(buff, 0, bytes);
+        return new String(buff);
+    }
+
+    private String readPhoto() throws IOException{
+        String buff = readLow(1000);
+        String photo;
+        while (buff.charAt(0) != 'O'){
+            buff = buff.substring(1);
+        }
+        int i;
+        if(buff.indexOf('P') < buff.indexOf('G'))
+            i = buff.indexOf('P');
+        else
+            i = buff.indexOf('G');
+        photo = buff.substring(i);
+        buff = buff.substring(1, i-1);
+        int bytes = Integer.parseInt(buff);
+        int juz = photo.length();
+        while (juz < bytes){
+            if(bytes - juz < 1000)
+                buff = readLow(bytes - juz);
+            else
+                buff = readLow(1000);
+            photo += buff;
+            juz += buff.length();
+        }
+        return photo;
     }
 
     public void write(String msg) throws IOException{
@@ -128,7 +161,7 @@ public class Connect implements Runnable{
     public Image getImage(){
         try {
             System.out.println("Receive good before read");
-            String s = read();
+            String s = readPhoto();
             System.out.println("Receive good after read");
             Image img = null;
             if(s.charAt(0) == 'P'){
@@ -147,8 +180,6 @@ public class Connect implements Runnable{
     public void sendImage(){
         try {
             Image img = imgFromVideo("img/pewdiepie2.jpg");
-            BufferedImage image = ImageIO.read(new File("img/pewdiepie2.jpg"));
-            String d = image.toString();
             int w = (int)img.getWidth();
             int h = (int)img.getHeight();
             byte[] buf = new byte[w * h * 4];
@@ -199,8 +230,6 @@ public class Connect implements Runnable{
     public void run() {
         try {
             sendNick();
-            requestUsersList();
-            receiveClients();
             while(receiveFromServer()) ;
         }catch (IOException ignored) { }
     }

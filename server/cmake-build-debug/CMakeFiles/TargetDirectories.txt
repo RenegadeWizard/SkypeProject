@@ -1,3 +1,3 @@
-/home/krzysztof/Dokumenty/SkypeProject/server/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/krzysztof/Dokumenty/SkypeProject/server/cmake-build-debug/CMakeFiles/server.dir
-/home/krzysztof/Dokumenty/SkypeProject/server/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/krzysztof/Documents/Studia/semestr 5/sieci/server/cmake-build-debug/CMakeFiles/server.dir
