@@ -39,7 +39,12 @@ public class Call implements Runnable{
         double width = background.getWidth();
         try {
             connection.write("G");
-        }catch (IOException ignored) {}
+            connection.unlockMutex();
+        }catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
         Stage stage = (Stage) background.getScene().getWindow();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample.fxml"));

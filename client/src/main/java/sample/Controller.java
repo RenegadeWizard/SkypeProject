@@ -162,8 +162,13 @@ public class Controller {
 
     @FXML
     public void rejectCall() throws IOException{
-        popUpClear();
-        connection.write("R" + connection.getNickFrom());
+        try {
+            popUpClear();
+            connection.write("R" + connection.getNickFrom());
+            connection.unlockMutex();
+        }catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
     }
 
     @FXML

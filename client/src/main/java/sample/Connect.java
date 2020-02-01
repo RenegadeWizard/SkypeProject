@@ -1,5 +1,6 @@
 package sample;
 
+import com.sun.corba.se.impl.orbutil.concurrent.Mutex;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 public class Connect implements Runnable{
     private Socket socket;
     private ObservableList<String> users;
+    private Mutex mutex;
 
     public BooleanProperty isWantsToConnect() {
         return wantsToConnect;
@@ -42,6 +44,15 @@ public class Connect implements Runnable{
 
     public Connect(){
         users = FXCollections.observableArrayList();
+        mutex = new Mutex();
+    }
+
+    public void lockMutex() throws InterruptedException{
+        mutex.acquire();
+    }
+
+    public void unlockMutex() throws InterruptedException{
+        mutex.release();
     }
 
     public void connectSocket(String serverIp, int port) throws IOException{
@@ -74,6 +85,7 @@ public class Connect implements Runnable{
     public void connectTo(String nick) throws IOException{
         String encapsulatedNick = "C" + nick;
         write(encapsulatedNick);
+
     }
 
     public void connection(){
@@ -102,22 +114,23 @@ public class Connect implements Runnable{
 
     public String readLow(int bytes) throws IOException{
         char[] buff = new char[bytes];
-        reader.read(buff, 0, bytes);
+        int n = reader.read(buff, 0, bytes-1);
+        buff[n] = 0;
         return new String(buff);
     }
 
     private String readPhoto() throws IOException{
         String buff = readLow(1000);
-        String photo;
+        StringBuilder photo;
         while (buff.charAt(0) != 'O'){
             buff = buff.substring(1);
         }
         int i;
-        if(buff.indexOf('P') < buff.indexOf('G'))
+        if(buff.indexOf('P') >= 0 && buff.indexOf('P') < buff.indexOf('G'))
             i = buff.indexOf('P');
         else
             i = buff.indexOf('G');
-        photo = buff.substring(i);
+        photo = new StringBuilder(buff.substring(i));
         buff = buff.substring(1, i-1);
         int bytes = Integer.parseInt(buff);
         int juz = photo.length();
@@ -126,10 +139,10 @@ public class Connect implements Runnable{
                 buff = readLow(bytes - juz);
             else
                 buff = readLow(1000);
-            photo += buff;
+            photo.append(buff);
             juz += buff.length();
         }
-        return photo;
+        return photo.toString();
     }
 
     public void write(String msg) throws IOException{
@@ -153,9 +166,14 @@ public class Connect implements Runnable{
     }
 
     public void connectionFrom(String nick){
-        System.out.println(nick);
-        nickFrom = nick;
-        wantsToConnect.setValue(true);
+        try {
+            System.out.println(nick);
+            nickFrom = nick;
+            wantsToConnect.setValue(true);
+            lockMutex();
+        }catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
     }
 
     public Image getImage(){
@@ -204,7 +222,14 @@ public class Connect implements Runnable{
     }
 
     public boolean receiveFromServer() throws IOException{
-        String msg = read();
+        String msg = "";
+        try {
+            lockMutex();
+            msg = read();
+            unlockMutex();
+        }catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
         switch (msg.charAt(0)){
             case 'S':
                 receiveClients();
@@ -227,7 +252,7 @@ public class Connect implements Runnable{
     }
 
     @Override
-    public void run() {
+    public void run(){
         try {
             sendNick();
             while(receiveFromServer()) ;
