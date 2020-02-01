@@ -59,7 +59,7 @@ public class Call implements Runnable{
     }
 
     public void reload(){
-        connection.sendImage();
+//        connection.sendImage();
         Image frame = connection.getImage();
         if(frame != null){
             BackgroundImage myImage = new BackgroundImage(frame, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);

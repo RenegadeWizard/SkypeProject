@@ -115,30 +115,40 @@ public class Connect implements Runnable{
     public String readLow(int bytes) throws IOException{
         char[] buff = new char[bytes];
         int n = reader.read(buff, 0, bytes-1);
-        buff[n] = 0;
+        try {
+            buff[n] = 0;
+        }catch(ArrayIndexOutOfBoundsException ex){
+            System.out.println("n = " + n);
+            ex.printStackTrace();
+        }
         return new String(buff);
     }
 
     private String readPhoto() throws IOException{
-        String buff = readLow(1000);
+        StringBuilder buff = new StringBuilder(readLow(1000));
         StringBuilder photo;
-        while (buff.charAt(0) != 'O'){
-            buff = buff.substring(1);
-        }
+        if(buff.toString().indexOf(0) != 'O')
+            return "Fail";
         int i;
-        if(buff.indexOf('P') >= 0 && buff.indexOf('P') < buff.indexOf('G'))
-            i = buff.indexOf('P');
+        i = buff.toString().indexOf('P');
+        if(i < 0){
+            while ((i = buff.toString().indexOf('P')) < 0){
+                buff.append(readLow(100));
+            }
+        }
+
+        if(i >=0 )
+            photo = new StringBuilder(buff.substring(i));
         else
-            i = buff.indexOf('G');
-        photo = new StringBuilder(buff.substring(i));
-        buff = buff.substring(1, i-1);
-        int bytes = Integer.parseInt(buff);
+            photo = new StringBuilder("");
+        buff = new StringBuilder(buff.substring(1, i - 1));
+        int bytes = Integer.parseInt(buff.toString());
         int juz = photo.length();
-        while (juz < bytes){
+        while (juz < bytes - 1){
             if(bytes - juz < 1000)
-                buff = readLow(bytes - juz);
+                buff = new StringBuilder(readLow(bytes - juz + 1));
             else
-                buff = readLow(1000);
+                buff = new StringBuilder(readLow(1000));
             photo.append(buff);
             juz += buff.length();
         }
