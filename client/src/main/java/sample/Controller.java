@@ -107,6 +107,11 @@ public class Controller {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/call.fxml"));
         double height = background.getHeight();
         double width = background.getWidth();
+        try {
+            connection.nowIsAccepted();
+        }catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
         Call callController = new Call(this, nick, connection);
         Thread thCall = new Thread(callController);
 //        thCall.setDaemon(true);
@@ -121,9 +126,12 @@ public class Controller {
     public void callView(String nick){
         try {
             connection.connectTo(nick);  // TODO
+            connection.lockMutex();
             changeToCall(nick);
         }catch (IOException e){
             System.err.println("Could not find call.fxml");
+        }catch (InterruptedException ex){
+            ex.printStackTrace();
         }
     }
 
@@ -175,6 +183,11 @@ public class Controller {
     public void acceptCall() throws IOException{
         popUpClear();
         connection.write("A" + connection.getNickFrom());
+        try {
+            connection.nowAccept();
+        }catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
         changeToCall(connection.getNickFrom());
     }
 

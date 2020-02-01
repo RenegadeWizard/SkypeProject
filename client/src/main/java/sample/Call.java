@@ -40,6 +40,7 @@ public class Call implements Runnable{
         try {
             connection.write("G");
             connection.unlockMutex();
+            connection.nowIsAccepted();
         }catch (IOException ex) {
             ex.printStackTrace();
         } catch (InterruptedException ex){

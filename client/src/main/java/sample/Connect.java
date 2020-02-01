@@ -17,7 +17,15 @@ import java.util.Arrays;
 public class Connect implements Runnable{
     private Socket socket;
     private ObservableList<String> users;
-    private Mutex mutex;
+    private Mutex mutex, accept;
+
+    public void nowIsAccepted() throws InterruptedException{
+        accept.acquire();
+    }
+
+    public void nowAccept() throws InterruptedException{
+        accept.release();
+    }
 
     public BooleanProperty isWantsToConnect() {
         return wantsToConnect;
@@ -45,6 +53,12 @@ public class Connect implements Runnable{
     public Connect(){
         users = FXCollections.observableArrayList();
         mutex = new Mutex();
+        accept = new Mutex();
+        try {
+            nowIsAccepted();
+        }catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
     }
 
     public void lockMutex() throws InterruptedException{
@@ -248,6 +262,7 @@ public class Connect implements Runnable{
                 connectionFrom(msg.substring(1));
                 break;
             case 'A':
+                accept.release();
                 connection();
                 break;
             case 'R':
