@@ -127,7 +127,7 @@ public class Connect implements Runnable{
     private String readPhoto() throws IOException{
         StringBuilder buff = new StringBuilder(readLow(1000));
         StringBuilder photo;
-        if(buff.toString().indexOf(0) != 'O')
+        if(buff.toString().charAt(0) != 'O')
             return "Fail";
         int i;
         i = buff.toString().indexOf('P');

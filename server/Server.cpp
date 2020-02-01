@@ -26,6 +26,8 @@ Server::Server(int port) {
         throw "Could not bind socket\n";
     }
     std::cout << "Socked binding successful\n";
+    mtx = new std::mutex();
+    mtx->unlock();
 }
 
 Server::~Server(){
@@ -45,14 +47,18 @@ void Server::run() {
     if(listen(serverSocket, 5) < 0){
         throw "Could not listen on socket\n";
     }
+    mtx = new std::mutex();     // TODO semafory lepsze (ale ich nie ma :c (mozna napisac w sumie))
     //std::thread *threadTab[10];
     while(true){
         int sock = accept(serverSocket, nullptr, nullptr);
-        Connection conn(sock, connTable);
+        Connection conn(sock, connTable, mtx);
         std::cout << "Accepted connection at " << sock << "\n";
+        mtx->lock();
         threadTab.push_back(new std::thread(conn));
         std::cout << "Created connection thread for " << sock << "\n";
-//        while(connTable.empty()){}
+        std::cout << "Sending info to all\n";
+        sendToEverybody();
+//        while(connTable.empty()){}acceptCall
 //        std::cout << "Nie fajnie!";
 //        try{
 //            while (true){
@@ -133,8 +139,10 @@ void Server::run() {
 //    conn->sendData(wholeInfo);
 //}
 
-//void Server::sendToEverybody() {
-//    for(auto c : connTable){
-//        sendInfo(c.second);
-//    }
-//}
+void Server::sendToEverybody() {
+    mtx->lock();
+    for(auto c : connTable){
+        std::cout << c.first << "\n";
+        c.second->sendInfo();
+    }
+}

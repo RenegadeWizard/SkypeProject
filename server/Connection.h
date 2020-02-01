@@ -19,30 +19,36 @@
 
 class Connection {
 public:
-    Connection(int, std::map<std::string, Connection*>&);
+    Connection(int, std::map<std::string, Connection*>&, std::mutex*);
     ~Connection();
     void operator()();
     void handleConnection();
-    char* readData(int);
+    std::string readData(int);
     void addConn(std::string, Connection*);
-    void sendData(char*);
+    void sendData(std::string);
     int getSocket() const;
     void disconnect();
     void setSocket(int socket);
     void setNick(std::string nick) { this->connNick = nick; }
     std::string getNick() { return connNick; }
     void sendInfo();
-    Connection* getConnection(char*);
+    Connection* getConnection(std::string);
     bool checkIfBusy();
     void unlockMtx();
     void handleCall(Connection*);
     void setHasAccepted(bool);
     void setCall(bool);
+    std::string readPhoto();
+    void request();
+    std::mutex* mutex;
 private:
     int socket;
     bool isBusy = false;
     bool hasAccepted = false;
     bool call = false;
+    bool shouldClose = false;
+    int bytes = -1;
+    std::string theRest = "";
     std::string connNick;
     std::map<std::string, Connection*> &connTable;
     std::shared_ptr<std::mutex> mtx;

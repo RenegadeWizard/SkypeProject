@@ -28,6 +28,7 @@ private:
     std::map<std::string, Connection*> connTable;
     int serverSocket;
     std::vector<std::thread*> threadTab;
+    int numberOfClients = 0;
 public:
     Server(int);
     ~Server();
@@ -38,7 +39,8 @@ public:
     //void disconnect(Connection*);
     //void connect(Connection*, Connection*);
     //void sendInfo(Connection*);
-    //void sendToEverybody();
+    void sendToEverybody();
+    std::mutex* mtx;
 };
 
 
