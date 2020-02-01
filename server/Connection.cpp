@@ -4,88 +4,112 @@
 
 #include "Connection.h"
 
-Connection::Connection(int socketHandle, std::map<std::string, Connection*>& conns) : connTable(conns) {
+Connection::Connection(int socketHandle, std::map<std::string, Connection*>& conns, std::mutex* mut) : connTable(conns) {
     socket = socketHandle;
     mtx.reset(new std::mutex());
+    mutex = mut;
 }
 
 Connection::~Connection() = default;
 
 void Connection::handleConnection() {
-    char* buff = new char(100);
-    if (read(socket, buff, 100) < 0) {
-        throw "Reading info failed\n";
+    std::string buff;
+    if(!theRest.length()){
+        buff = readData(1000);
+    }else{
+        buff = theRest.substr(0,theRest.find('\n'));
+        if(buff != theRest)
+            theRest = theRest.substr(theRest.find('\n')+1);
+        else
+            theRest = "";
     }
+
+
     Connection *c = nullptr;
-    char* tmp = new char(100);
-    std::string stringNick;
     switch (buff[0]) {
         case 'N':
             std::cout << "Nick: ";
-            buff++;
-            stringNick = std::string(buff);
-            addConn(stringNick, this);
-            setNick(stringNick);
-            sendData((char*)"Z\n");
+            buff = buff.substr(1);
+            addConn(buff, this);
+            setNick(buff);
+            sendData("Z\n");
+            mutex->unlock();
             break;
         case 'C':
             isBusy = true;
             std::cout << "Connect to: ";
-            c = getConnection(++buff);
+            c = getConnection(buff.substr(1));
             if(!c->checkIfBusy()) {
-                strcpy(tmp, "C");
-                strcat(tmp, connNick.c_str());
-                c->sendData(tmp);
+                c->sendData("C" + connNick + "\n");
                 //sendData((char *) "A\n");
                 mtx->lock();
                 mtx->lock();
-                if (hasAccepted)
+                mtx->unlock();
+                std::cout << "unlocked mtx for" << getNick() << "\n";
+
+                if (hasAccepted) {
+                    std::cout << c->getNick() << " has accepted the call\n";
                     handleCall(c);
+                }
+                else{
+                    std::cout << c->getNick() << " has rejected the call\n";
+                }
 
                 isBusy = false;
             }
-            //connect(conn, c);
             break;
         case 'L':
             sendInfo();
             break;
         case 'A':
             isBusy = true;
-            c = getConnection(++buff);
+            c = getConnection(buff.substr(1));
             c->setHasAccepted(true);
-            strcpy(tmp, "A");
-            c->sendData(tmp);
+            c->sendData("A\n");
             c->unlockMtx();
             handleCall(c);
             break;
         case 'R':
             isBusy = true;
-            c = getConnection(++buff);
+            c = getConnection(buff.substr(1));
             c->setHasAccepted(false);
-            strcpy(tmp, "R");
-            c->sendData(tmp);
+            c->sendData("R\n");
             c->unlockMtx();
             break;
         case 'D':
              disconnect();
             break;
+        case 'O':
+            std::cout << buff.substr(1);
+            theRest = buff.substr(buff.find('\n')+1);
+            buff = buff.substr(1,buff.find('\n'));
+            bytes = std::stoi(buff);
+            break;
         default:
 //                std::cout << "This: " << buff << "\n";
             throw "Not recognized action\n";
     }
-    delete buff;
-    delete tmp;
+    //delete buff;
+    //delete tmp;   //TODO zwalnianie pamięci
 //    std::cout << buff << "\n";
 }
 
-char* Connection::readData(int bytes) {
-    char* buff = nullptr;
-    read(socket, buff, bytes);
-    return buff;
+std::string Connection::readData(int bytes) {
+    char *buff = (char*) malloc(bytes);
+    int n = read(socket, buff, bytes-1);
+    if(n == -1){
+        throw "Reading failed\n";
+    }
+    buff[n] = 0;
+    std::string string = std::string(buff);
+    free(buff);
+    return string;
 }
 
-void Connection::sendData(char* buff) {
-    write(socket, buff, strlen(buff));
+void Connection::sendData(std::string buff) {
+    auto s = "O" + std::to_string(buff.length()) + "\n";
+    write(socket, s.c_str(), s.length());
+    write(socket, buff.c_str(), buff.length());
 }
 
 int Connection::getSocket() const {
@@ -101,28 +125,19 @@ void Connection::addConn(std::string nick, Connection* conn) {
 }
 
 void Connection::operator()() {
-    while(true) {
+    while(!shouldClose) {
         handleConnection();
     }
 }
 
 void Connection::sendInfo() {
-    char* wholeInfo = new char(100);
-    strcpy(wholeInfo, "S");
-    strcat(wholeInfo, "clients\n");
-    sendData(wholeInfo);
-    //sleep(1);
+    sendData("Sclients\n");
     for(auto c : connTable){
-        strcpy(wholeInfo, "I");
-        strcat(wholeInfo, c.first.c_str());
-        strcat(wholeInfo, "\n");
-        std::cout << "Sending: " << wholeInfo;
-        sendData(wholeInfo);
-        //sleep(1);
+        std::cout << "Sending: " << "I" + c.first + "\n";
+        sendData("I" + c.first + "\n");
     }
-    strcpy(wholeInfo, "E");
-    strcat(wholeInfo, "clients\n");
-    sendData(wholeInfo);
+    sendData("Eclients\n");
+    mutex->unlock();
 }
 
 void Connection::disconnect() {
@@ -131,14 +146,17 @@ void Connection::disconnect() {
             connTable.erase(a.first);
             break;
         }
-    sendData((char*)"Disconnected");
+    sendData("Disconnected\n");
     close(socket);
-    delete this;
+    shouldClose = true;
 }
 
-Connection* Connection::getConnection(char* nick) {
-    std::string snick = std::string(nick);
-    return connTable[snick];
+void Connection::request() {
+    sendData("Sclients\n");
+}
+
+Connection* Connection::getConnection(std::string nick) {
+    return connTable[nick];
 }
 
 bool Connection::checkIfBusy() {
@@ -149,30 +167,65 @@ void Connection::unlockMtx() {
     mtx->unlock();
 }
 
+std::string Connection::readPhoto() {
+    std::string buff, rest;
+    int ile = 0, juz = 0;
+    buff = readData(1000);
+    if(buff[0] != 'O')
+        return "Fail";
+    int i;
+    while((i = buff.find('P')) < 0){
+        buff += readData(100);
+    }
+
+    rest = buff.substr(i);
+    buff = buff.substr(1, i-1);
+    ile = std::stoi(buff);
+    juz = rest.length();
+    while(juz < ile - 1){
+        if(ile - juz < 1000)
+            buff = readData(ile - juz + 1);
+        else
+            buff = readData(1000);
+//        std::cout << buff;
+        rest.append(buff);
+        juz += buff.length();
+    }
+    return rest;
+}
+
 void Connection::handleCall(Connection* c) {
-    char* buf ;
+    std::cout << getNick() << " started handling the call\n";
+
     call = true;
     bool hangedUpByThisClient = false;
+    std::string photo;
     while(call) {
-        buf = readData(1000);
-        if (buf[0] == 'G') {
+        photo = readPhoto();
+        if(photo == "Fail")
+            continue;
+        std::cout << getNick() << " read the data\n";
+        if (photo[0] == 'G') {
             call = false;
             c->setCall(false);
             hangedUpByThisClient = true;
         }
         else{
-            c->sendData(buf);
+
+            c->sendData(photo + "\n");
         }
     }
+
     if(!hangedUpByThisClient) {
-        sendData((char*)"G\n");
+        sendData("G\n");
     }
 }
 
-void Connection::setHasAccepted(bool didThey) {
-    hasAccepted = didThey;
+void Connection::setHasAccepted(bool hasHeThough) {
+    hasAccepted = hasHeThough;
 }
 
 void Connection::setCall(bool cl) {
     this->call = cl;
 }
+
