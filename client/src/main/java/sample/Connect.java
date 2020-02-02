@@ -12,12 +12,16 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class Connect implements Runnable{
     private Socket socket;
     private ObservableList<String> users;
     private Mutex mutex, accept;
+    private String buffer = "";
+    private int bytesToRead;
 
     public void nowIsAccepted() throws InterruptedException{
         accept.acquire();
@@ -77,7 +81,7 @@ public class Connect implements Runnable{
     public void disconnect() throws IOException{
         String encapsulatedNick = "Disconnect";
         write(encapsulatedNick);
-        while (read().charAt(0) != 'D');
+        while (readEverything().charAt(0) != 'D');
         System.out.println("Disconnected!");
         socket.close();
     }
@@ -86,20 +90,19 @@ public class Connect implements Runnable{
         String encapsulatedNick = "N" + nick;
         write(encapsulatedNick);
         System.out.println("Sent nick");
-        while(read().charAt(0) != 'Z');
+        while(readEverything().charAt(0) != 'Z');
     }
 
     public void requestUsersList() throws IOException{
         String encapsulatedNick = "Lrequest";
         write(encapsulatedNick);
         System.out.println("requesting clients list");
-        while(read().charAt(0) != 'S');
+        while(readEverything().charAt(0) != 'S');
     }
 
     public void connectTo(String nick) throws IOException{
         String encapsulatedNick = "C" + nick;
         write(encapsulatedNick);
-
     }
 
     public void connection(){
@@ -126,48 +129,33 @@ public class Connect implements Runnable{
         return line.toString();
     }
 
-    public String readLow(int bytes) throws IOException{
-        char[] buff = new char[bytes];
-        int n = reader.read(buff, 0, bytes-1);
-        try {
-            buff[n] = 0;
-        }catch(ArrayIndexOutOfBoundsException ex){
-            System.out.println("n = " + n);
-            ex.printStackTrace();
+
+    private String readEverything() throws IOException{
+        String tempBuffer = "";
+        char[] temp = new char[1000];
+        int n;
+        while(buffer.indexOf('\n') < 0){
+            n = reader.read(temp, 0, 999);
+            temp[n] = 0;
+            buffer += new String(temp);
         }
-        return new String(buff);
+        if(buffer.charAt(0) == 'O'){
+            bytesToRead = Integer.parseInt(buffer.substring(1, buffer.indexOf('\n')));
+            buffer = buffer.substring(buffer.indexOf('\n') + 1);
+        }
+        int count = buffer.length();
+        while (count < bytesToRead){
+            n = reader.read(temp, 0, 999);
+            temp[n] = 0;
+            buffer += new String(temp);
+            count += n;
+        }
+        tempBuffer = buffer.substring(0, bytesToRead-1);
+        buffer = buffer.substring(bytesToRead);
+        return tempBuffer;
     }
 
-    private String readPhoto() throws IOException{
-        StringBuilder buff = new StringBuilder(readLow(1000));
-        StringBuilder photo;
-        if(buff.toString().charAt(0) != 'O')
-            return "Fail";
-        int i;
-        i = buff.toString().indexOf('P');
-        if(i < 0){
-            while ((i = buff.toString().indexOf('P')) < 0){
-                buff.append(readLow(100));
-            }
-        }
 
-        if(i >=0 )
-            photo = new StringBuilder(buff.substring(i));
-        else
-            photo = new StringBuilder("");
-        buff = new StringBuilder(buff.substring(1, i - 1));
-        int bytes = Integer.parseInt(buff.toString());
-        int juz = photo.length();
-        while (juz < bytes - 1){
-            if(bytes - juz < 1000)
-                buff = new StringBuilder(readLow(bytes - juz + 1));
-            else
-                buff = new StringBuilder(readLow(1000));
-            photo.append(buff);
-            juz += buff.length();
-        }
-        return photo.toString();
-    }
 
     public void write(String msg) throws IOException{
         OutputStream os = socket.getOutputStream();
@@ -178,10 +166,10 @@ public class Connect implements Runnable{
     public void receiveClients() throws IOException{
         users.clear();
         while(true){
-            String msg = read();
+            String msg = readEverything();
             if(msg.charAt(0) == 'E')
                 break;
-            if(msg.substring(1).equals("clients") || msg.charAt(0) == 'O') {
+            if(msg.substring(1).equals("clients")) {
                 continue;
             }
             System.out.println(msg.substring(1));
@@ -203,11 +191,11 @@ public class Connect implements Runnable{
     public Image getImage(){
         try {
             System.out.println("Receive good before read");
-            String s = readPhoto();
+            String s = readEverything();
             System.out.println("Receive good after read");
             Image img = null;
             if(s.charAt(0) == 'P'){
-                img = new Image(new ByteArrayInputStream(s.substring(1).getBytes()));
+                img = new Image(new ByteArrayInputStream(s.substring(1, s.length()-1).getBytes()));
             }else if(s.charAt(0) == 'G'){
                 img = null;
             }
@@ -236,6 +224,29 @@ public class Connect implements Runnable{
         }
     }
 
+    public void sendText(){
+        try {
+            String s = new String(Files.readAllBytes(Paths.get("lorem.txt")));
+            s = "P" + s;
+            write(s);
+            System.out.println("Send good");
+        }catch (IOException ignored) {
+            System.err.println("Send image not good");
+            ignored.printStackTrace();
+        }
+    }
+
+    public void getText(){
+        try {
+            System.out.println("Receive good before read");
+            String s = readEverything();
+            System.out.println("Receive good after read");
+            System.out.println(s);
+        }catch (IOException ignored){
+            System.err.println("Receive image not good");
+        }
+    }
+
     private Image imgFromVideo(String file) throws IOException{
         Image frame = new Image(file);
         return frame;
@@ -249,7 +260,7 @@ public class Connect implements Runnable{
         String msg = "";
         try {
             lockMutex();
-            msg = read();
+            msg = readEverything();
             unlockMutex();
         }catch (InterruptedException ex){
             ex.printStackTrace();

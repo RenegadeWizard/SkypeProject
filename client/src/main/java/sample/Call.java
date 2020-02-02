@@ -60,14 +60,16 @@ public class Call implements Runnable{
     }
 
     public void reload(){
+        connection.sendText();
+        connection.getText();
 //        connection.sendImage();
-        Image frame = connection.getImage();
-        if(frame != null){
-            BackgroundImage myImage = new BackgroundImage(frame, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-            background.setBackground(new Background(myImage));
-        }else{
-            endCall();
-        }
+//        Image frame = connection.getImage();
+//        if(frame != null){
+//            BackgroundImage myImage = new BackgroundImage(frame, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
+//            background.setBackground(new Background(myImage));
+//        }else{
+//            endCall();
+//        }
     }
 
     @FXML
