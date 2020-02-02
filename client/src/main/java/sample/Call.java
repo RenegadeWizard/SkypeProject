@@ -50,7 +50,6 @@ public class Call implements Runnable{
         try {
             connection.write("G");
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample.fxml"));
-            controller = new Controller();
             loader.setController(controller);
             Parent root = loader.load();
             Stage stage = (Stage) background.getScene().getWindow();
@@ -80,10 +79,11 @@ public class Call implements Runnable{
         Label label = new Label(text);
         Label who = new Label(nick + ":");
         if (which)
-            who.setStyle("-fx-text-fill: #990022;");
+            who.setStyle("-fx-text-fill: #aa3300;");
         else
-            who.setStyle("-fx-text-fill: #220099;");
+            who.setStyle("-fx-text-fill: #33aa00;");
         label.setWrapText(true);
+        label.setStyle("-fx-text-fill: #bbb;");
         hbox.getChildren().add(who);
         hbox.getChildren().add(label);
         return hbox;
@@ -92,7 +92,7 @@ public class Call implements Runnable{
     public void reload(){
         try {
             System.out.println("początek czytania");
-            response = connection.readEverything().substring(1);
+            response = connection.readEverything();
             System.out.println("koniec czytania");
             isResponse.setValue(!isResponse.getValue());
         }catch (IOException ex){
@@ -106,9 +106,10 @@ public class Call implements Runnable{
             public void run() {
                 if (response.charAt(0) == 'G'){
                     endLabel.setText(nick + " opuścił czat");
+                    System.out.println(nick + " opuścił czat");
                     return;
                 }
-                mainVBox.getChildren().add(createField(response, nick, false));
+                mainVBox.getChildren().add(createField(response.substring(1), nick, false));
             }
         });
     }
@@ -119,11 +120,17 @@ public class Call implements Runnable{
         height = primaryScreenBounds.getWidth() * 0.494;
         width = primaryScreenBounds.getWidth() * 0.8;
         mainVBox.setPrefHeight(height - 220);
+        mainVBox.setPrefWidth(width);
         isResponse.addListener(e->ziomekNapisal());
     }
 
     @Override
     public void run() {
+        try {
+            connection.nowIsAccepted();
+        }catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
         while(true) { reload(); }
     }
 }

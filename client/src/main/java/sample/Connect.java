@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.PixelFormat;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
@@ -46,6 +45,7 @@ public class Connect implements Runnable{
     private String nick;
     private BufferedReader reader;
     private int howMuch = -1;
+    public Mutex clientsListMutex;
 
 
     public String getNick() { return nick; }
@@ -59,6 +59,7 @@ public class Connect implements Runnable{
         users = FXCollections.observableArrayList();
         mutex = new Mutex();
         accept = new Mutex();
+        clientsListMutex = new Mutex();
         try {
             nowIsAccepted();
         }catch (InterruptedException ex){
@@ -137,6 +138,8 @@ public class Connect implements Runnable{
         int n;
         while(buffer.indexOf('\n') < 0){
             n = reader.read(temp, 0, 999);
+            if (n == -1)
+                return "";
             temp[n] = 0;
             buffer += new String(temp);
         }
@@ -150,6 +153,8 @@ public class Connect implements Runnable{
         int count = buffer.length();
         while (buffer.length() < bytesToRead - 1){
             n = reader.read(temp, 0, 999);
+            if (n == -1)
+                return "";
             temp[n] = 0;
             buffer += new String(temp);
             count += n;
@@ -158,7 +163,7 @@ public class Connect implements Runnable{
             }
         }
 
-        tempBuffer = buffer.substring(0, bytesToRead-1);
+        tempBuffer = buffer.substring(0, bytesToRead - 1);
         buffer = buffer.substring(bytesToRead);
         System.out.print("Reading: ");
         System.out.println(tempBuffer.length());
@@ -176,6 +181,11 @@ public class Connect implements Runnable{
     }
 
     public void receiveClients() throws IOException{
+        try {
+            clientsListMutex.acquire();
+        }catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
         users.clear();
         while(true){
             String msg = readEverything();
@@ -187,6 +197,7 @@ public class Connect implements Runnable{
             System.out.println(msg.substring(1));
             users.add(msg.substring(1));
         }
+        clientsListMutex.release();
     }
 
     public void connectionFrom(String nick){

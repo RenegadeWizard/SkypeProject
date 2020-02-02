@@ -7,6 +7,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -75,18 +76,23 @@ public class Controller {
     private BooleanProperty isReceivingConn;
 
     private void popUp(String nick){
-        popUpCall.getStyleClass().clear();
-        popUpCall.getStyleClass().add("popUpCall");
-        popUpLabel.getStyleClass().clear();
-        popUpLabel.getStyleClass().add("popUpLabel");
-        popUpHbox.getStyleClass().clear();
-        popUpHbox.getStyleClass().add("popUpHbox");
-        callButton.getStyleClass().clear();
-        callButton.getStyleClass().add("call");
-        endCallButton.getStyleClass().clear();
-        endCallButton.getStyleClass().add("endCall");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                popUpCall.getStyleClass().clear();
+                popUpCall.getStyleClass().add("popUpCall");
+                popUpLabel.getStyleClass().clear();
+                popUpLabel.getStyleClass().add("popUpLabel");
+                popUpHbox.getStyleClass().clear();
+                popUpHbox.getStyleClass().add("popUpHbox");
+                callButton.getStyleClass().clear();
+                callButton.getStyleClass().add("call");
+                endCallButton.getStyleClass().clear();
+                endCallButton.getStyleClass().add("endCall");
 
-        popUpLabel.setText(nick + " calls");
+                popUpLabel.setText(nick + " calls");
+            }
+        });
     }
 
     private void popUpClear(){
@@ -107,14 +113,8 @@ public class Controller {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/call.fxml"));
         double height = background.getHeight();
         double width = background.getWidth();
-        try {
-            connection.nowIsAccepted();
-        }catch (InterruptedException ex){
-            ex.printStackTrace();
-        }
         Call callController = new Call(this, nick, connection);
         Thread thCall = new Thread(callController);
-//        thCall.setDaemon(true);
         thCall.start();
         loader.setController(callController);
         Parent root = loader.load();
@@ -124,21 +124,31 @@ public class Controller {
     }
 
     public void callView(String nick){
-        try {
-            connection.connectTo(nick);  // TODO
-            connection.lockMutex();
-            changeToCall(nick);
-        }catch (IOException e){
-            e.printStackTrace();
-        }catch (InterruptedException ex){
-            ex.printStackTrace();
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    connection.connectTo(nick);
+                    connection.lockMutex();
+                    changeToCall(nick);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }catch (InterruptedException ex){
+                    ex.printStackTrace();
+                }
+            }
+        });
     }
 
     public void listClients(){
+        try {
+            connection.clientsListMutex.acquire();
+        }catch (InterruptedException ex){
+            ex.printStackTrace();
+        }
         contacts.getChildren().clear();
         for(String nick : connection.getUsers()){
-            if(nick.equals(connection.getNick())){    // TODO: Don't show yourself
+            if(nick.equals(connection.getNick())){    //Don't show yourself
                 continue;
             }
             HBox hbox = new HBox();
@@ -162,10 +172,11 @@ public class Controller {
             hbox.getStyleClass().add("hbox");
             VBox container = new VBox();
             Label nickLabel = new Label(nick);
+            nickLabel.setStyle("-fx-text-fill: #bbb; -fx-padding: 5 0 0 20;");
             container.getChildren().addAll(hbox, nickLabel);
             contacts.getChildren().add(container);
         }
-
+        connection.clientsListMutex.release();
     }
 
     @FXML
