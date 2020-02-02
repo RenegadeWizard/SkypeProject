@@ -1,5 +1,8 @@
 package sample;
 
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,6 +30,8 @@ public class Call implements Runnable{
     private Connect connection;
     private double width;
     private double height;
+    private String response;
+    private BooleanProperty isResponse;
 
     @FXML private BorderPane background;
     @FXML private VBox mainVBox;
@@ -38,6 +43,7 @@ public class Call implements Runnable{
         this.controller = controller;
         this.nick = nick;
         this.connection = connection;
+        isResponse = new SimpleBooleanProperty(false);
     }
 
     @FXML private void returnTo(){
@@ -85,14 +91,27 @@ public class Call implements Runnable{
 
     public void reload(){
         try {
-            String response = connection.readEverything();
-            if (response.charAt(0) == 'G'){
-                endLabel.setText(nick + " opuścił czat");
-            }
-            mainVBox.getChildren().add(createField(response, nick, false));
+            System.out.println("początek czytania");
+            response = connection.readEverything();
+            System.out.println("koniec czytania");
+            isResponse.setValue(true);
         }catch (IOException ex){
             ex.printStackTrace();
         }
+    }
+
+    private void ziomekNapisal(){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (response.charAt(0) == 'G'){
+                    endLabel.setText(nick + " opuścił czat");
+                    return;
+                }
+                mainVBox.getChildren().add(createField(response, nick, false));
+                isResponse.setValue(false);
+            }
+        });
     }
 
     @FXML
@@ -101,6 +120,7 @@ public class Call implements Runnable{
         height = primaryScreenBounds.getWidth() * 0.494;
         width = primaryScreenBounds.getWidth() * 0.8;
         mainVBox.setPrefHeight(height - 220);
+        isResponse.addListener(e->ziomekNapisal());
     }
 
     @Override

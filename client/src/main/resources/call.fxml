@@ -18,7 +18,7 @@
     <center>
         <VBox>
             <ScrollPane styleClass="promptField">
-                <VBox fx:id="mainVBox" styleClass="promptField"/>
+                <VBox fx:id="mainVBox" styleClass="promptField" maxWidth="1000"/>
             </ScrollPane>
             <Label fx:id="endLabel"/>
         </VBox>
