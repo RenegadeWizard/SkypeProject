@@ -16,6 +16,7 @@
 #include <thread>
 #include <iostream>
 #include <mutex>
+#include "ReaderWriter.h"
 
 class Connection {
 public:
@@ -23,9 +24,7 @@ public:
     ~Connection();
     void operator()();
     void handleConnection();
-    std::string readData(int);
     void addConn(std::string, Connection*);
-    void sendData(std::string);
     int getSocket() const;
     void disconnect();
     void setSocket(int socket);
@@ -38,17 +37,14 @@ public:
     void handleCall(Connection*);
     void setHasAccepted(bool);
     void setCall(bool);
-    std::string readPhoto();
-    void request();
     std::mutex* mutex;
+    ReaderWriter* reader;
 private:
     int socket;
     bool isBusy = false;
     bool hasAccepted = false;
     bool call = false;
     bool shouldClose = false;
-    int bytes = -1;
-    std::string theRest = "";
     std::string connNick;
     std::map<std::string, Connection*> &connTable;
     std::shared_ptr<std::mutex> mtx;
