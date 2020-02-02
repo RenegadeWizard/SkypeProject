@@ -92,9 +92,9 @@ public class Call implements Runnable{
     public void reload(){
         try {
             System.out.println("początek czytania");
-            response = connection.readEverything();
+            response = connection.readEverything().substring(1);
             System.out.println("koniec czytania");
-            isResponse.setValue(true);
+            isResponse.setValue(!isResponse.getValue());
         }catch (IOException ex){
             ex.printStackTrace();
         }
@@ -109,7 +109,6 @@ public class Call implements Runnable{
                     return;
                 }
                 mainVBox.getChildren().add(createField(response, nick, false));
-                isResponse.setValue(false);
             }
         });
     }
