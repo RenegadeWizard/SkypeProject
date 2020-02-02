@@ -1,13 +1,19 @@
 package sample;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -22,11 +28,11 @@ public class Call implements Runnable{
     private double width;
     private double height;
 
-    @FXML
-    private BorderPane background;
+    @FXML private BorderPane background;
+    @FXML private VBox mainVBox;
+    @FXML private TextArea promptField;
+    @FXML private Label endLabel;
 
-    @FXML
-    private Button endCallButton;
 
     public Call(Controller controller, String nick, Connect connection){
         this.controller = controller;
@@ -34,56 +40,67 @@ public class Call implements Runnable{
         this.connection = connection;
     }
 
-    private void endCall(){
-        double height = background.getHeight();
-        double width = background.getWidth();
+    @FXML private void returnTo(){
         try {
             connection.write("G");
-            connection.unlockMutex();
-            connection.nowIsAccepted();
-        }catch (IOException ex) {
-            ex.printStackTrace();
-        } catch (InterruptedException ex){
-            ex.printStackTrace();
-        }
-        Stage stage = (Stage) background.getScene().getWindow();
-        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/sample.fxml"));
+            controller = new Controller();
             loader.setController(controller);
             Parent root = loader.load();
-            Scene scene = new Scene(root, width, height);
-            stage.setScene(scene);
-            stage.show();
-        }catch(IOException e){
-            System.err.println("Could not find sample.fxml");
+            Stage stage = (Stage) background.getScene().getWindow();
+            stage.setScene(new Scene(root, width, height));
+        }catch (IOException ex){
+            ex.printStackTrace();
         }
     }
 
+    @FXML private void enter(KeyEvent key){
+        if(key.getCode().equals(KeyCode.ENTER)){
+            try {
+                mainVBox.getChildren().add(createField(promptField.getText(), connection.getNick(), true));
+                connection.write("P" + promptField.getText());
+                promptField.setText("");
+                promptField.positionCaret(0);
+
+            }catch (IOException ex){
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private HBox createField(String text, String nick, boolean which){
+        HBox hbox = new HBox();
+        hbox.setSpacing(10);
+        Label label = new Label(text);
+        Label who = new Label(nick + ":");
+        if (which)
+            who.setStyle("-fx-text-fill: #990022;");
+        else
+            who.setStyle("-fx-text-fill: #220099;");
+        label.setWrapText(true);
+        hbox.getChildren().add(who);
+        hbox.getChildren().add(label);
+        return hbox;
+    }
+
     public void reload(){
-        connection.sendText();
-        connection.getText();
-//        connection.sendImage();
-//        Image frame = connection.getImage();
-//        if(frame != null){
-//            BackgroundImage myImage = new BackgroundImage(frame, BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-//            background.setBackground(new Background(myImage));
-//        }else{
-//            endCall();
-//        }
+        try {
+            String response = connection.readEverything();
+            if (response.charAt(0) == 'G'){
+                endLabel.setText(nick + " opuścił czat");
+            }
+            mainVBox.getChildren().add(createField(response, nick, false));
+        }catch (IOException ex){
+            ex.printStackTrace();
+        }
     }
 
     @FXML
     public void initialize(){
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        height = primaryScreenBounds.getWidth() * 0.495;
+        height = primaryScreenBounds.getWidth() * 0.494;
         width = primaryScreenBounds.getWidth() * 0.8;
-        BackgroundImage myImage = new BackgroundImage(new Image("img/pewdiepie.jpg", width, height, false,false), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-        background.setBackground(new Background(myImage));
-        endCallButton.setOnAction(e->endCall());
-        ImageView imageView = new ImageView(new Image("img/call.png"));
-        imageView.setFitHeight(30);
-        imageView.setFitWidth(30);
-        endCallButton.setGraphic(imageView);
+        mainVBox.setPrefHeight(height - 220);
     }
 
     @Override

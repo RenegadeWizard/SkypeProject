@@ -129,7 +129,7 @@ public class Controller {
             connection.lockMutex();
             changeToCall(nick);
         }catch (IOException e){
-            System.err.println("Could not find call.fxml");
+            e.printStackTrace();
         }catch (InterruptedException ex){
             ex.printStackTrace();
         }

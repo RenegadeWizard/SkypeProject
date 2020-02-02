@@ -10,13 +10,21 @@
 <?import javafx.scene.image.Image?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            stylesheets="call.css"
-            fx:id="background" id="background">
+            stylesheets="main.css"
+            fx:id="background">
+    <top>
+        <Button onAction="#returnTo"/>
+    </top>
+    <center>
+        <VBox>
+            <ScrollPane styleClass="promptField">
+                <VBox fx:id="mainVBox" styleClass="promptField"/>
+            </ScrollPane>
+            <Label fx:id="endLabel"/>
+        </VBox>
+
+    </center>
     <bottom>
-        <BorderPane>
-            <center>
-                <Button fx:id="endCallButton" id="endCall"></Button>
-            </center>
-        </BorderPane>
+        <TextArea promptText="Halo" wrapText="true" prefHeight="200" fx:id="promptField" styleClass="promptField" onKeyReleased="#enter"/>
     </bottom>
 </BorderPane>

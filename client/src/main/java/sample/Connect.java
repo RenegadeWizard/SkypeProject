@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
@@ -130,7 +131,7 @@ public class Connect implements Runnable{
     }
 
 
-    private String readEverything() throws IOException{
+    public String readEverything() throws IOException{
         String tempBuffer = "";
         char[] temp = new char[1000];
         int n;
@@ -139,19 +140,28 @@ public class Connect implements Runnable{
             temp[n] = 0;
             buffer += new String(temp);
         }
+        if(buffer.indexOf('\0') > 0){
+            buffer = buffer.substring(0, buffer.indexOf('\0'));
+        }
         if(buffer.charAt(0) == 'O'){
             bytesToRead = Integer.parseInt(buffer.substring(1, buffer.indexOf('\n')));
             buffer = buffer.substring(buffer.indexOf('\n') + 1);
         }
         int count = buffer.length();
-        while (count < bytesToRead){
+        while (buffer.length() < bytesToRead - 1){
             n = reader.read(temp, 0, 999);
             temp[n] = 0;
             buffer += new String(temp);
             count += n;
+            if(buffer.indexOf('\0') > 0){
+                buffer = buffer.substring(0, buffer.indexOf('\0'));
+            }
         }
+
         tempBuffer = buffer.substring(0, bytesToRead-1);
         buffer = buffer.substring(bytesToRead);
+        System.out.print("Reading: ");
+        System.out.println(tempBuffer.length());
         return tempBuffer;
     }
 
@@ -160,6 +170,8 @@ public class Connect implements Runnable{
     public void write(String msg) throws IOException{
         OutputStream os = socket.getOutputStream();
         os.write(("O" + msg.length() + "\n").getBytes());
+        System.out.print("Sending: ");
+        System.out.println(msg.length());
         os.write(msg.getBytes());
     }
 
@@ -195,7 +207,12 @@ public class Connect implements Runnable{
             System.out.println("Receive good after read");
             Image img = null;
             if(s.charAt(0) == 'P'){
-                img = new Image(new ByteArrayInputStream(s.substring(1, s.length()-1).getBytes()));
+//                img = new Image(new ByteArrayInputStream(s.substring(1, s.length()-1).getBytes()));
+//                Files.write((new File("/Users/krzysztof/Documents/Studia/semestr 5/sieci/client/src/main/resources/img/readImg.jpg")).toPath(), s.substring(1).getBytes());
+                OutputStream os = new FileOutputStream(new File("/Users/krzysztof/Documents/Studia/semestr 5/sieci/client/src/main/resources/img/readImg.jpg"));
+                os.write(s.substring(1).getBytes(), 0, s.substring(1).length());
+                os.flush();
+                os.close();
             }else if(s.charAt(0) == 'G'){
                 img = null;
             }
@@ -226,7 +243,7 @@ public class Connect implements Runnable{
 
     public void sendText(){
         try {
-            String s = new String(Files.readAllBytes(Paths.get("lorem.txt")));
+            String s = new String(Files.readAllBytes(Paths.get("/Users/krzysztof/Documents/Studia/semestr 5/sieci/client/src/main/resources/lorem.txt")));
             s = "P" + s;
             write(s);
             System.out.println("Send good");
@@ -241,7 +258,9 @@ public class Connect implements Runnable{
             System.out.println("Receive good before read");
             String s = readEverything();
             System.out.println("Receive good after read");
-            System.out.println(s);
+            OutputStream os = new FileOutputStream(new File("/Users/krzysztof/Documents/Studia/semestr 5/sieci/client/src/main/resources/lorem2.txt"));
+            os.write(s.substring(1).getBytes(), 0, s.substring(1).length());
+//            System.out.println(s);
         }catch (IOException ignored){
             System.err.println("Receive image not good");
         }
